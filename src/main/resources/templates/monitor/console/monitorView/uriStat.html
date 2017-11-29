@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listUriStat}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+template.helper('getDistribute', function(t1, t2, t3, t4, t5, t6) {
+	var a = [];
+	a.push(t1 ? t1 : '0');
+	a.push(t2 ? t2 : '0');
+	a.push(t3 ? t3 : '0');
+	a.push(t4 ? t4 : '0');
+	a.push(t5 ? t5 : '0');
+	a.push(t6 ? t6 : '0');
+	return "[" + a.join(",") + "]";
+})
+
+function viewSql(uri) {
+	open([[@{/monitorView/viewSqlByUri?uri=}]] + uri);
+}
+
+template.helper('transferUri', function(uri) {
+	return uri.replace(/\'/g, "\\'");
+})
+
+template.helper('transfer', function(str) {
+	return JSON.stringify(str);
+})
+
+function viewDetail(obj) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#uriStat')">
+<div th:fragment="queryFragment">
+	<label>URI:</label><input type="text" class="form-control input-sm" name="uri" placeholder="全匹配URI">
+	<label>平均响应:</label>		
+	<input type="text" class="form-control input-sm w-date" name="beginAvgTime" placeholder="大于等于">
+		-
+	<input type="text" class="form-control input-sm w-date" name="endAvgTime" placeholder="小于等于">
+	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>	
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th>URI</th>
+		<th data-order-name="avgTime">平均响应ms</th>
+		<th data-order-name="times">次数</th>
+		<th>总时间ms</th>
+		<th data-order-name="maxTime">最慢用时ms</th>
+		<th>最初访问时间</th>
+		<th class="page-sorting-desc" data-order-name="lasted">最后访问时间</th>			
+		<th>[~10,~100,~1s,~3s,~10s,~]</th>		
+        <th>操 作</th>         
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td style="text-align:left"><div title="{{v._id}}" class="ellipsis w-title-l">{{v._id}}</div></td>
+		<td class="w-number-m">{{v.avgTime}}</td>
+		<td class="w-number-m">{{v.times}}</td>
+		<td class="w-number-m">{{v.totalTime}}</td>
+		<td class="w-number-m">{{v.maxTime}}</td>
+		<td class="w-time">{{v.firsted}}</td>
+		<td class="w-time">{{v.lasted}}</td>
+		<td>{{getDistribute(v.ms0_10, v.ms10_100, v.ms100_s1, v.s1_3, v.s3_10, v.s10_)}}</td>
+		<td>
+			<a href="#" onclick="viewSql('{{transferUri(v._id)}}')">[查看sql]</a>
+			<a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this)">[详情]</a></td>
+		</td>
+	</tr>
+	{{/each}}
+	</script>   
+</table>
+</div>
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+
+</body>
+</html>
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {	
+	$("#dbStats").text(formatJson($("#dbStats").text(), false));
+	
+	freshPage([[${listJson}]]);
+	honeySwitch.init();
+	
+
+	switchEvent("[name=switch]", function(obj){
+		var serviceId = $(obj).attr("data-service-id");
+		var model = $(obj).attr("data-model");
+		onSwitch(serviceId, model, true);
+	}, function(obj){
+		var serviceId = $(obj).attr("data-service-id");
+		var model = $(obj).attr("data-model");
+		onSwitch(serviceId, model, false);
+	});
+	
+});
+
+function freshPage(data) {
+	if (!data) return;
+	$("#pageTemplate").parent().find("tr:gt(0)").remove();
+	$("#pageTemplate").parent().append(template('pageTemplate', data));
+}
+
+
+function onSwitch(serviceId, model, isOpen) {
+	$('#loading').modal('show');
+	if (model == "debug") {
+		var para = "serviceId=" + serviceId + "&debug=" + isOpen;
+		$.post([[@{/monitorConf/setAccessDebug}]], para, function(r){
+			$("[name='" + serviceId + "']").text(r.string);
+			$('#loading').modal('hide');
+			alertSuccess("设置成功！");
+		});
+	}
+	else if (model == "warning") {
+		var para = "serviceId=" + serviceId + "&warning=" + isOpen;
+		$.post([[@{/monitorConf/setAccessWarning}]], para, function(r){
+			$("[name='" + serviceId + "']").text(r.string);
+			$('#loading').modal('hide');
+			alertSuccess("设置成功！");
+		});
+	}
+}
+
+function changeGatherInterval(serviceId, gatherInterval) {
+	$('#loading').modal('show');
+	var para = "serviceId=" + serviceId + "&gatherInterval=" + gatherInterval;
+	$.post([[@{/monitorConf/setGatherInterval}]], para, function(r){
+		$("[name='lasted" + serviceId + "']").text(r.string);
+		$("[name='interval" + serviceId + "']").text(gatherInterval/1000 + "秒");
+		$('#loading').modal('hide');
+		alertSuccess("设置成功！");
+	});
+}
+
+function changeDumpMaxTime(serviceId, dumpMaxTime) {
+	$('#loading').modal('show');
+	var para = "serviceId=" + serviceId + "&dumpMaxTime=" + dumpMaxTime;
+	$.post([[@{/monitorConf/setDumpMaxTime}]], para, function(r){
+		$("[name='lasted" + serviceId + "']").text(r.string);
+		$("[name='maxTime" + serviceId + "']").text(dumpMaxTime/1000 + "秒");
+		$('#loading').modal('hide');
+		alertSuccess("设置成功！");
+	});
+}
+
+
+function cleanError() {
+	$("#deletePassword").show();
+	$("#msg").text("确定清除异常日志(数据不能恢复)？");
+	$("#msg").attr("data-type", "cleanError");
+	$("#cleanConfig").modal("show");
+}
+
+function cleanGather() {
+	$("#deletePassword").show();
+	$("#msg").text("确定清除采集日志(数据不能恢复)？");
+	$("#msg").attr("data-type", "cleanGather");
+	$("#cleanConfig").modal("show");
+}
+
+function cleanDebug() {
+	$("#deletePassword").hide();
+	$("#msg").text("确定清除debug数据(数据不能恢复)？");
+	$("#msg").attr("data-type", "cleanDebug");
+	$("#cleanConfig").modal("show");
+}
+
+function cleanWarning() {
+	$("#deletePassword").hide();
+	$("#msg").text("确定清除warning数据(数据不能恢复)？");
+	$("#msg").attr("data-type", "cleanWarning");
+	$("#cleanConfig").modal("show");
+}
+
+function cleanStat() {
+	$("#deletePassword").hide();
+	$("#msg").text("确定清除统计数据(uri统计 、sql统计和响应统计, 数据不能恢复))？");
+	$("#msg").attr("data-type", "cleanStat");
+	$("#cleanConfig").modal("show");
+}
+
+function clean() {
+	$("#cleanConfig").modal("hide");
+	var type = $("#msg").attr("data-type");
+	$('#loading').modal('show');
+	$.post([[@{/monitorConf/}]] + type, "deletePassword=" + $("#deletePassword").val(), function(r){
+		$('#loading').modal('hide');
+		if (r.errorCode == -1) {
+			alertWarning("清除失败，清除密码错误！");
+		}
+		else {
+			alertSuccess("清除成功！");
+		}		
+	});
+}
+
+</script>
+</head>
+
+<body>
+
+<div class="page-list-body">
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul>
+	<script>$('#set').tab('show')</script>	
+	<div class="page-list-query">
+		<div class="page-list-title">	
+			<div style="padding-top:4px">设置同步时间15秒(本机立即生效)；
+				<span style="color:red">warning和debug会影响系统性能(机器重启为关闭状态)，不使用时请关闭。</span>			
+			</div>		
+		</div>
+	</div>
+	
+	<table class="table table-bordered table-hover table-condensed">
+		<tr>
+			<th style="width:140px">微服务
+			<th>warning模式</th>  
+			<th>debug模式</th>				
+			<th>采集间隔</th>
+			<th>dump最大时间<span class="glyphicon glyphicon-question-sign"  title="请求时间超过该值时，会采集dump线程"></span></th>   
+			<th>最后修改时间</th>    
+		</tr>	
+		<script id="pageTemplate" type="text/html">
+		{{each}}
+		<tr>
+			<td>{{$value._id}}</td>
+			<td>
+				<div class="cell-right"><span name="switch" data-service-id="{{$value._id}}" data-model="warning" class="{{if $value.isAccessWarning}}switch-on{{else}}switch-off{{/if}}" themeColor="gold"></span></div>
+			</td>
+			<td>
+				<div class="cell-right"><span name="switch" data-service-id="{{$value._id}}" data-model="debug" class="{{if $value.isAccessDebug}}switch-on{{else}}switch-off{{/if}}"></span></div>
+			</td>				
+			<td><span name="interval{{$value._id}}">{{$value.gatherInterval/1000}}秒</span>
+				<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">修改 <span class="caret"></span></button>
+				<ul class="dropdown-menu" role="menu">
+				<li><a href="#" onclick="changeGatherInterval('{{$value._id}}', 20000)">20秒(测试用)</a></li>
+				<li><a href="#" onclick="changeGatherInterval('{{$value._id}}', 3*60000)">3分钟</a></li>
+				<li><a href="#" onclick="changeGatherInterval('{{$value._id}}', 5*60000)">5分钟(默认)</a></li>
+				<li><a href="#" onclick="changeGatherInterval('{{$value._id}}', 10*60000)">10分钟</a></li>
+				</ul>
+				</div>
+			</td>
+			<td><span name="maxTime{{$value._id}}">{{$value.dumpMaxTime/1000}}秒</span>
+				<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">修改 <span class="caret"></span></button>
+				<ul class="dropdown-menu" role="menu">
+				<li><a href="#" onclick="changeDumpMaxTime('{{$value._id}}', 2*1000)">2秒</a></li>
+				<li><a href="#" onclick="changeDumpMaxTime('{{$value._id}}', 5*1000)">5秒(默认)</a></li>
+				<li><a href="#" onclick="changeDumpMaxTime('{{$value._id}}', 10*1000)">10秒</a></li>
+				<li><a href="#" onclick="changeDumpMaxTime('{{$value._id}}', 60*1000)">60秒</a></li>
+				<li><a href="#" onclick="changeDumpMaxTime('{{$value._id}}', 600*1000)">600秒</a></li>
+				</ul>
+				</div>
+
+			</td>
+			<td name="lasted{{$value._id}}">{{$value.lasted}}</td>
+		</tr>
+		{{/each}}
+		</script>  
+	</table>
+	
+	<div class="RedSea-Title-1">	
+		<button type="button" class="btn btn-primary" onclick="cleanError()">&times; 清除异常*</button>
+		<button type="button" class="btn btn-primary" onclick="cleanGather()">&times; 清除采集*</button>		
+		<button type="button" class="btn btn-primary" onclick="cleanStat()">&times; 清除统计(uri 、sql和响应)</button>
+		<button type="button" class="btn btn-primary" onclick="cleanWarning()">&times; 清除warning</button>	
+		<button type="button" class="btn btn-primary" onclick="cleanDebug()">&times; 清除debug</button>	
+		|
+		<a href="#" onclick="$('#viewDbStats').modal('show');">查看db.stats()</a>				
+	</div>
+	
+</div>
+
+
+<div class="modal fade" id="cleanConfig" role="dialog" tabindex="-1">
+   <div class="modal-dialog" style="width:500px;">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+            <h4 class="modal-title">确认</h4>
+         </div>
+         <div class="modal-body" style="height:auto">
+         	<div class="form-group" style="width:100%;text-align: center;">      	
+         		<span id="msg" data-type=""></span>
+         		<input type="text" id="deletePassword" placeholder="请输入清除密码" class="form-control input-sm" style="display:inline-block; width:150px">
+         	</div>
+         </div>
+         <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+         	<button type="button" class="btn btn-danger" onclick="clean()">确定清除</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<div class="modal fade" id="viewDbStats" role="dialog" tabindex="-1">
+   <div class="modal-dialog" style="width:600px;"> 
+      <div class="modal-content">
+         <div class="modal-header">
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+            <h4 class="modal-title">db.stats()</h4>
+         </div>
+         <div class="modal-body" style="height:auto">
+         	<div class="form-group" style="width:100%">      	
+         		<pre id="dbStats" th:text="${dbStats}")></pre>
+         	</div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+</body>
+</html>
+

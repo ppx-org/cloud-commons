@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listSqlStat}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+function viewSqlDetail(_id) {
+	open([[@{/monitorView/viewSqlDetail?_id=}]] + _id);
+}
+
+template.helper('getDistribute', function(t1, t2, t3, t4, t5, t6) {
+	var a = [];
+	a.push(t1 ? t1 : '0');
+	a.push(t2 ? t2 : '0');
+	a.push(t3 ? t3 : '0');
+	a.push(t4 ? t4 : '0');
+	a.push(t5 ? t5 : '0');
+	a.push(t6 ? t6 : '0');
+	return "[" + a.join(",") + "]";
+})
+
+template.helper('transfer', function(str) {
+	return JSON.stringify(str);
+})
+
+function viewDetail(obj) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+
+function formatSql(obj) {
+	var output = sqlFormatter.format($(obj).prev().text());
+	$("#viewFormatSql").text(output);
+	$("#viewFormat").modal("show");
+	
+}
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#sqlStat')">
+<div th:fragment="queryFragment">
+	<label>SQL:</label><input type="text" class="form-control input-sm" name="sql" placeholder="全匹配SQL">
+	<label>平均响应:</label>
+	<input type="text" class="form-control input-sm w-date" name="beginAvgTime" placeholder="大于等于">
+		-
+	<input type="text" class="form-control input-sm w-date" name="endAvgTime" placeholder="小于等于">
+	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>	
+	<span style="white-space:nowrap;" class="glyphicon glyphicon-question-sign" title="详情里的maxDetail指的是最慢用时的详情"></span>		
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th style="width:280px">SQL</th>
+		<th data-order-name="avgTime">平均响应ms</th>
+		<th>次数</th>
+		<th>总时间ms</th>
+		<th data-order-name="maxTime">最慢用时ms</th>
+		<th>最初访问时间</th>
+		<th class="page-sorting-desc" data-order-name="lasted">最后访问时间</th>
+		<th>[~10,~100,~1s,~3s,~10s,~]</th>
+		<th data-order-name="maxSqlCount">最大结果集</th>				
+       	<th>操 作</th>                    
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td>
+			<div title="{{v._id}}" class="ellipsis w-title-l" style="float:left;">{{v._id}}</div>
+			<a href="#" onclick="formatSql(this)" title="格式化sql" class="glyphicon glyphicon-indent-left"></a>
+		</td>
+		<td class="w-number-m">{{v.avgTime}}</td>
+		<td class="w-number-m">{{v.times}}</td>
+		<td class="w-number-m">{{v.totalTime}}</td>
+		<td class="w-number-m">{{v.maxTime}}</td>
+		<td class="w-time">{{v.firsted}}</td>
+		<td class="w-time">{{v.lasted}}</td>
+		<td style="w-title-l">{{getDistribute(v.ms0_10, v.ms10_100, v.ms100_s1, v.s1_3, v.s3_10, v.s10_)}}</td>
+		<td class="w-number-m">{{v.maxSqlCount}}</td>
+		<td class="w-action"><a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this)">详情</a></td>
+	</tr>
+	{{/each}}
+	</script>  
+</table>
+</div>
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+
+<div class="modal fade" id="viewFormat" tabindex="-1" role="dialog" >
+   <div class="modal-dialog" style="width:600px;"> 
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">格式化sql</h4>
+         </div>
+         <div class="modal-body" style="height:auto">
+         	<div class="form-group" style="width:100%;height:450px">      	
+         		<pre  id="viewFormatSql"  style="height:450px"></pre>
+         	</div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+</body>
+</html>
+

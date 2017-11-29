@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>debug详情</title>
+
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {	
+	var detail = [[${detail}]];
+	var text = formatJson(JSON.stringify(detail), false);
+	$("#detail").text(text);
+});
+
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span>debug详情</div>
+	
+	<table class="table table-bordered table-hover table-condensed">			
+		<tr>
+			<td><pre id="detail" style="text-align: left"></pre></td>
+		</tr>  
+	</table>
+</div>
+
+</body>
+</html>
+

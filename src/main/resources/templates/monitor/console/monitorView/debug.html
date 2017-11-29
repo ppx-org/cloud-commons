@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listDebug}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+function viewDebugDetail(_id) {
+	open([[@{/monitorView/viewDebugDetail?_id=}]] + _id);
+}
+</script>
+
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageListMonitor('#debug')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>			
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	<label>日期:</label>	
+	<input type="text" class="form-control input-sm" name="date" th:value="${date}" onclick="WdatePicker()" style="width:90px">			
+       <input type="text" class="form-control input-sm" name="beginTime" placeholder="开始时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" style="width:90px">-<input type="text" class="form-control input-sm" name="endTime" placeholder="结束时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" style="width:90px">			
+	<label>URI:</label><input type="text" class="form-control input-sm" name="uri" placeholder="全匹配URI">
+	<button class="btn btn-default btn-sm" onclick="queryPage(1);return false;"><span class="glyphicon glyphicon-search"></span>搜索</button>		
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th style="width:140px">微服务</th>
+		<th class="pageSortingDesc" orderName="beginTime" style="width:160px">访问时间<span class="glyphicon"></span></th>				
+		<th style="width:250px;">URI</th>
+		<th style="width:150px">queryString</th>
+		<th>花费时间ms</th>
+		<th>IP</th>				
+		<th style="width:150px">异常</th>						
+            	<th style="width:60px">操 作</th>                  
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td>{{v.serviceId}}</td>
+		<td>{{v.beginTime}}</td>
+		<td style="text-align:left"><div title="{{v.uri}}" style="width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{v.uri}}</div></td>
+		<td><div title="{{v.queryString}}" style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{v.queryString}}</div></td>
+		<td style="text-align:right;padding-right:10px">{{v.spendTime}}</td>
+		<td>{{v.ip}}</td>
+		<td>
+			<div title="{{if v.error != null}}{{v.error.code}}:{{v.error.info}}{{/if}}" style="width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+			{{if v.error != null}}{{v.error.code}}:{{v.error.info}}{{/if}}<div>
+		</td>
+		<td><a href="#" onclick="viewDebugDetail('{{(v.hexId)}}')">详情</a></td>
+	</tr>
+	{{/each}}
+	</script>
+</table>
+</div>
+
+
+
+
+</body>
+</html>
+

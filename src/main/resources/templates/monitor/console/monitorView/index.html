@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {	
+	var listService = [[${listMachine}]];
+	
+	$("#pageTemplate").parent().append(template("pageTemplate", listService));
+	
+	listService.forEach(function(o){
+		createChart("memory" + o._id, "M", o.maxMemory, o.lastUseMemory);
+		createChart("cpu" + o._id, "%", 100, (o.lastProcessCpuLoad * 100).toFixed(2));
+		createChart("response" + o._id, "ms", 3000, o.lastResponse);
+		createChart("dsActive" + o._id, "个",  o.maxActive, o.lastDsActive);
+	})
+});
+
+function createChart(id, unit, chartMax, chartValue) {
+	var option = {
+		series: [{
+			max:chartMax,
+			type:'gauge',
+    	    detail:{formatter:'{value}'},
+    	    data:[{value:chartValue, name:unit}],
+    	    axisLine:{lineStyle:{width:4,shadowColor:'#fff',}},
+            splitLine:{length:15,lineStyle:{width:1,color:'black',shadowColor:'#fff',}}
+    	}]
+	}
+	var chart = echarts.init(document.getElementById(id));
+	chart.setOption(option);
+}
+
+template.helper('viewDisk', function(t, lastUsableSpace) {
+	var r = "";
+	for (var i in t) {
+		if (t[i] == 0) continue;
+		var u = (lastUsableSpace ? lastUsableSpace[i] : -1);
+		var per = (t[i] - u) / t[i] * 100;
+		per = !per ? 0 : per;
+		r += '<div style="float:left">' + i + '</div>\
+			  <div class="progress" style="text-align:center">' + (u / 1024).toFixed(1) + 'G\
+			  	<div class="progress-bar progress-bar-warning" role="progressbar" style="width:' + per + '%;color:blue">' + ((t[i] - u) / 1024).toFixed(1) + 'G</div>\
+			  </div>'
+	}
+	return r;
+})
+</script>
+
+<style type="text/css">
+.gaugeTh {width:210px}
+.gaugeTd {width:240px;height:240px;margin:-20px;margin-bottom:-30px}
+</style>
+</head>
+
+<body>
+<div class="page-list-body">
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul><script>$('#index').tab('show')</script>
+	<div class="page-list-query">
+		<div class="page-list-title"><b th:text="${title}" style="font-size:18px"></b>(<span th:text="${currentServiceId}"></span>)</div>
+	</div> 	
+    
+	<table class="page-list-table table table-bordered">
+		<tr>
+			<th style="width:185px;">微服务</th>
+			<th class="gaugeTh">堆内存</th>
+			<th class="gaugeTh">进程CPU使用率</th>
+			<th class="gaugeTh">服务响应时间</th>
+			<th class="gaugeTh">数据库连接</th>
+			<th>硬盘</th>  
+		</tr>
+		<script id="pageTemplate" type="text/html">
+		{{each}}
+		<tr>	
+			<td style="text-align:left">{{$value._id}}<br>
+				项目:{{$value.artifactId}}<br>
+				版本:{{$value.version}}<br>
+				系统:{{$value.osName}}<br>
+				内存:{{($value.totalPhysicalMemory/1024/1024).toFixed(0)}}M<br>
+				核数:{{$value.availableProcessors}}<br>
+				 更新:{{$value.lasted}}<br>
+				 并发:{{$value.lastConcurrentN}}<br>
+				 模式:{{if $value.isAccessWarning}}<font style="color:red">warning=1</font>{{else}}warning=0{{/if}},
+				    {{if $value.isAccessDebug}}<font style="color:red">debug=1</font>{{else}}debug=0{{/if}}
+			 </td>
+			 <td><div class="gaugeTd" id="memory{{$value._id}}" ></div></td>
+			 <td><div class="gaugeTd" id="cpu{{$value._id}}"></div></td>
+			 <td><div class="gaugeTd" id="response{{$value._id}}"></div></td>	
+			 <td><div class="gaugeTd" id="dsActive{{$value._id}}"></div></td>
+			 <td>{{#viewDisk($value.totalSpace, $value.lastUsableSpace)}}</td>
+		</tr>
+		{{/each}}
+		</script>
+	</table>
+</div>
+
+</body>
+</html>
+

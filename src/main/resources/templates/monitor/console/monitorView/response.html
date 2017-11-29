@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listResponse}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+</script>
+
+<style>
+#threshold .input-group-addon {width:180px}
+</style>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#response')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>			
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	
+	<label>小时:</label>
+	<input type="number" class="form-control input-sm" name="beginHH" placeholder="开始小时" style="width:120px">
+		-
+	<input type="number" class="form-control input-sm" name="endHH" placeholder="结束小时" style="width:120px">			
+	
+	<label>平均响应时间:</label>
+	<input type="number" class="form-control input-sm" name="beginAvgTime" style="width:100px">
+		-
+	<input type="number" class="form-control input-sm" name="endAvgTime" style="width:100px">			
+	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>			
+
+	<span class="glyphicon glyphicon-question-sign" title="统计不包括静态页面、404、异常和监控查看的请求"></span>		
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th>微服务</th>
+		<th class="page-sorting-desc" data-order-name="_id">小时yyyyMMddHH</th>
+		<th data-order-name="avgTime">平均响应时间ms</th>
+		<th>次数</th>
+		<th>总花费时间ms</th>	                
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-s">{{v.serviceId}}</td>
+		<td class="w-title-s">{{v.HH}}</td>
+		<td class="w-number-m">{{v.avgTime}}</td>
+		<td class="w-number-m">{{v.times}}</td>
+		<td class="w-number-m">{{v.totalTime}}</td>
+	</tr>
+	{{/each}}
+	</script> 
+</table>
+</div>
+
+
+</body>
+</html>
+

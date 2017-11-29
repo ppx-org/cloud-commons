@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>SQL列表</title>
+
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/querySqlByUri}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+template.helper('transfer', function(str) {
+	return JSON.stringify(str);
+})
+
+function viewDetail(obj) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+
+function formatSql(obj) {
+	var output = sqlFormatter.format($(obj).prev().text());
+	$("#viewFormatSql").text(output);
+	$("#viewFormat").modal("show");	
+}
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageList('SQL列表')">
+	<div th:fragment="queryFragment"></div>
+	<table th:fragment="listFragment">
+	<tr>
+		<th style="width:720px">SQL</th>     
+		<th style="width:150">最初访问时间</th>     
+		<th style="width:150">最后访问时间</th>
+		<th>操作</th>             
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td>
+			<div title="{{v._id}}" style="float:left;width:690px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{v._id}}</div>
+			<a href="#" onclick="formatSql(this)" title="格式化sql" class="glyphicon glyphicon-indent-left"></a>
+		</td>
+		<td>{{v.firsted}}</td>
+		<td>{{v.lasted}}</td>
+		<td><a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this)">详情</a></td>
+	</tr>
+	{{/each}}
+	</script>
+	</table>
+</div>
+
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+<div class="modal fade" id="viewFormat" tabindex="-1" role="dialog" >
+   <div class="modal-dialog" style="width:600px;">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">格式化sql</h4>
+         </div>
+         <div class="modal-body" style="height:auto">
+         	<div class="form-group" style="width:100%;height:450px">      	
+         		<pre sid="viewFormatSql"  style="height:450px"></pre>
+         	</div>
+         </div>
+      </div>
+   </div>
+</div>
+
+</body>
+</html>
+

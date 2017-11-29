@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	if ($("#date").val() == "") {
+		alertWarning("日期不能为空！");
+		return;
+	}
+	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listAccess}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+</script>
+</head>
+
+<body>
+<div th:replace="common/fragment/common::pageListMonitor('#access')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	<label>日期:</label>
+	<input type="text" class="form-control input-sm w-date" name="date" th:value="${date}" onclick="WdatePicker()">
+    <input type="text" class="form-control input-sm w-date" name="beginTime" placeholder="开始时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})">
+    	-
+    <input type="text" class="form-control input-sm w-date" name="endTime" placeholder="结束时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})">	
+	<label>URI:</label><input type="text" class="form-control input-sm" name="uri" placeholder="全匹配URI">
+	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>		
+	
+	<span class="glyphicon glyphicon-question-sign" title="不记录监控查看请求"></span>	
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th>微服务</th>
+		<th class="page-sorting-desc" data-order-name="beginTime">访问时间</th>			
+		<th>URI</th>
+		<th>queryString</th>				
+		<th data-order-name="spendTime">花费时间ms</th>
+		<th>IP</th>		
+		<th>异常</th>
+		<th>已用堆</th>	
+		<th>用户ID</th>
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-s">{{v.serviceId}}</td>
+		<td style="width:180px">{{v.beginTime}}</td>
+		<td style="text-align:left;"><div title="{{v.uri}}" class="ellipsis w-title-l">{{v.uri}}</div></td>
+		<td><div title="{{v.queryString}}" class="ellipsis w-title-s">{{v.queryString}}</div></td>
+		<td class="w-number-m">{{v.spendTime}}</td>
+		<td class="w-title-s">{{v.ip}}</td>
+		<td>
+			<div title="{{if v.error != null}}{{v.error.code}}:{{v.error.info}}{{/if}}" class="ellipsis w-title-m">
+			{{if v.error != null}}{{v.error.code}}:{{v.error.info}}{{/if}}
+			<div>
+		</td>
+		<td class="w-number">{{v.useMemory}}M</td>
+		<td class="w-title-s">{{v.userId}}</td>			
+	</tr>
+	{{/each}}
+	</script>    
+</table>
+</div>
+
+
+</body>
+</html>
+

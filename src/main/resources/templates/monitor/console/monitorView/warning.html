@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listWarning}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+template.helper('transfer', function(content) {
+	return JSON.stringify(content);
+})
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#warning')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>			
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	<button class="btn btn-default btn-sm" onclick="queryPage(1);return false;"><span class="glyphicon glyphicon-search"></span>搜索</button>	
+	1:未关闭连接;2:for update不加事务;3:sql没有加上where;4:事务个数大于1;5:多个操作SQL没有事务6:sql注入风险7:
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th style="width:140px">微服务</th>
+		<th style="width:250px;">URI</th>
+		<th>最初访问时间</th>
+		<th>最后访问时间</th>
+		<th>警告内容</th>              
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-s">{{v.serviceId}}</td>
+		<td style="text-align:left"><div title="{{v.uri}}" class="ellipsis w-title-l">{{v.uri}}</div></td>
+		<td class="w-time">{{v.beginTime}}</td>
+		<td class="w-time">{{v.lasted}}</td>
+		<td class="w-title-l">{{v.content}}</td>
+	</tr>
+	{{/each}}
+	</script>  
+</table>
+</div>
+
+
+</body>
+</html>
+

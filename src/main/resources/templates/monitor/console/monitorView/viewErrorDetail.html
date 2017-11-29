@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>异常详情</title>
+
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function(){	
+	var detail = [[${detail}]];
+	var accessJson = formatJson(JSON.stringify(detail.access), false);
+	var exceptionJson = formatJson(JSON.stringify(detail.exception), false);
+	$("#accessJson").text(accessJson);
+	$("#exceptionJson").text(exceptionJson);
+});
+
+</script>
+</head>
+
+<body>
+<div class="page-list-body">
+	<div class="page-list-title"><span class="glyphicon glyphicon-th-list"></span>异常详情</div>
+
+	<table  class="table table-bordered table-hover table-condensed">
+		<tr>
+			<td><pre id="exceptionJson" style="text-align: left; color: red"></pre></td>
+		</tr>
+		<tr>
+			<td><pre id="accessJson" style="text-align: left;"></pre></td>
+		</tr>
+	</table>
+</div>
+
+</body>
+</html>
+

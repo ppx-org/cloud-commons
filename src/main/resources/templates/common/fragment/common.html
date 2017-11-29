@@ -1,0 +1,126 @@
+<link   th:fragment="base" rel="stylesheet" th:href="'/demo/static/bootstrap-3.3.7/css/bootstrap.min.css'"/>
+<script th:fragment="base" type="text/javascript" th:src="#{staticPath}+'/static/common/jquery-3.2.1.min.js'"></script>
+<script th:fragment="base" type="text/javascript" th:src="#{staticPath}+'/static/bootstrap-3.3.7/js/bootstrap.min.js'"></script>
+<script th:fragment="base" type="text/javascript" th:inline="javascript">var contextPath = [[@{/}]]</script>
+
+<link   th:fragment="common" th:replace="::base"></link>
+<link   th:fragment="common" rel="stylesheet" th:href="#{staticPath}+'/static/common/common-0.1.css'"/>
+<script th:fragment="common" type="text/javascript" th:src="#{staticPath}+'/static/common/template3.0.js'"></script>
+<script th:fragment="common" type="text/javascript" th:src="#{staticPath}+'/static/common/common-0.1.js'"></script>
+
+<link   th:fragment="treeview" rel="stylesheet" th:href="#{staticPath}+'/static/treeview/bootstrap-treeview.min.css'" />
+<script th:fragment="treeview" type="text/javascript" th:src="#{staticPath}+'/static/treeview/bootstrap-treeview-v1.min.js'"></script>
+<script th:fragment="typeahead" type="text/javascript" th:src="#{staticPath}+'/static/typeahead/bootstrap3-typeahead.min.js'"></script>
+<link   th:fragment="validation" rel="stylesheet" th:href="#{staticPath}+'/static/validation/validationEngine.jquery.css'" />
+<script th:fragment="validation" type="text/javascript" th:src="#{staticPath}+'/static/validation/jquery.validationEngine-2.6.2.min.js'"></script>
+<script th:fragment="date" type="text/javascript" th:src="#{staticPath}+'/static/date/WdatePicker.js'"></script>
+<script th:fragment="formatter" type="text/javascript" th:src="#{staticPath}+'/static/module/monitor/formatter.js'"></script>
+<script th:fragment="gauge" type="text/javascript" th:src="#{staticPath}+'/static/module/monitor/echarts-gauge-3.7.2.min.js'"></script>
+
+<link th:fragment="monitor" th:replace="::common"></link>
+<link th:fragment="monitor" th:replace="::date"></link>
+<link th:fragment="monitor" th:replace="::formatter"></link>
+<link th:fragment="monitor" th:replace="::gauge"></link>
+
+
+
+
+<!--  -->
+<div th:fragment="pageList(title)">
+	<div th:replace="::pageListBody(0)"></div>
+</div>
+
+<!--  -->
+<div th:fragment="pageListMonitor(tabId)">
+<div class="page-list-body">
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul><script th:inline="javascript">$([[${tabId}]]).tab('show')</script>
+	<div th:replace="::pageListBody(1)"></div>
+</div>
+</div>
+
+
+
+
+<div th:fragment="pageListBody(type)" class="page-list-body">
+	<div class="page-list-query">
+		<div class="page-list-title" th:if="${type == 0}")><span class="glyphicon glyphicon-th-list"></span><span th:text="${title}"></span></div>
+		<form id="queryForm" class="form-inline">
+		<input type="hidden" id="pageSize" name="pageSize" value="15">
+		<input type="hidden" id="pageNumber" name="pageNumber">
+		<input type="hidden" id="orderName" name="orderName">
+		<input type="hidden" id="orderType" name="orderType">
+		<div th:include="::queryFragment"></div>
+		</form>		
+	</div>
+	<table class="page-list-table table table-bordered table-condensed" th:include="::listFragment"></table>
+	<nav class="page-list-footer">
+		<ul id="pageNumUL" class="pagination pull-left pagination-sm"></ul>
+	    <div class="page-list-footer-msg" >
+		<div class="col-xs-1 input-group-sm">
+		<select onchange="$('#pageSize').val(this.value);queryPage(1)" class="form-control">		        
+			<option value="15">15条</option>
+			<option value="25">25条</option>
+			<option value="50">50条</option>
+			<option value="100">100条</option>	    
+		</select>
+		</div>
+		<div>共<b id="totalRows"></b>条记录</div>
+		</div>
+	</nav>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div th:fragment="viewDetail" class="modal fade" id="viewDetail" tabindex="-1" role="dialog">
+	<div class="modal-dialog" style="width:860px;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="modal-title">详情</h4>
+		</div>
+		<div class="modal-body">
+         	<div class="form-group" style="width:100%;height:450px"><pre id="viewDetailJson" style="height:450px"></pre></div>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+<div th:fragment="modal(fragment, title, width)" th:id="${fragment}" class="modal fade" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog" th:style="'width:' + ${width==null?'':width + 'px'}">
+	<div class="modal-content">
+	<div class="modal-header">
+		<button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button><h5 class="modal-title" th:text="${title}"></h5>
+	</div>
+	<div class="modal-body" style="height:auto;">
+	<div class="form-group" style="width:100%;">
+	<form th:id="${fragment}+'Form'" class="form-horizontal" th:include="::${fragment}"></form>
+	</div>
+	</div>
+	<div class="modal-footer">
+		<!-- 
+		<button class="btn btn-primary btn-sm" th:onclick="${fragment}+'Ok()'" type="button">确定</button>
+		 -->
+		<button class="btn btn-primary btn-sm" onclick="action.call()" type="button">确定</button>
+		<button class="btn btn-default btn-sm" data-dismiss="modal" type="button">关闭</button>
+	</div>
+	</div>
+</div>
+</div>
+
+
+<link th:fragment="myTest" rel="stylesheet" th:href="#{staticPath}+'/static/bootstrap-3.3.7/css/bootstrap.min.css'"/>
+
+
+

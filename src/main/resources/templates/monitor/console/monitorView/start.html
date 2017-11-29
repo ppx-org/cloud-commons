@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listStart}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+template.helper('transfer', function(str) {
+	return JSON.stringify(str);
+})
+
+function viewDetail(obj, serviceId) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+</script>
+</head>
+
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#start')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>			
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	<button type="button" class="btn btn-default btn-sm" onclick="queryPage(1);"><span class="glyphicon glyphicon-search"></span>搜索</button>		
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th>微服务</th>
+		<th>项目</th>	
+		<th>版本</th>	
+		<th>启动时间</th>	
+		<th>启动用时ms</th>
+		<th>服务个数</th>			
+		<th>bean个数</th>	
+		<th>操作</th>              
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-s">{{v.serviceId}}</td>	
+		<td>{{v.artifactId}}</td>	
+		<td>{{v.version}}</td>
+		<td>{{v.startTime}}</td>
+		<td class="w-number-m">{{v.jvmSpendTime}}</td>
+		<td class="w-number-m">{{v.handlerMethodsSize}}</td>
+		<td class="w-number-m">{{v.beanDefinitionCount}}</td>
+		<td><a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this, '{{v._id}}')">详情</a></td>
+	</tr>
+	{{/each}}
+	</script>    
+</table>
+</div>
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+</body>
+</html>
+

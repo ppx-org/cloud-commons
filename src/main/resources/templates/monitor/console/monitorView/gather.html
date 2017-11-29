@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+function queryPage(pageNumber) {
+	
+	showLoading();
+	$("#pageNumber").val(pageNumber);
+	$.post([[@{/monitorView/listGather}]], $("#queryForm").serialize(), function(data) {
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+
+template.helper('transfer', function(str) {
+	return JSON.stringify(str);
+})
+
+function viewDetail(obj, serviceId) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+</script>
+</head>
+<body>
+
+<div th:replace="common/fragment/common::pageListMonitor('#gather')">
+<div th:fragment="queryFragment">
+	<label>微服务:</label>
+	<select class="form-control input-sm" name="serviceId">
+		<option value="">全部</option>
+		<option th:value="${item._id}" th:text="${item._id}" th:each="item:${listMachine}"></option>
+	</select>
+	<label>日期:</label>
+	<input type="text" class="form-control input-sm w-date" name="date" th:value="${date}" onclick="WdatePicker()">
+	<input type="text" class="form-control input-sm w-date" name="beginTime" placeholder="开始时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})">
+	<input type="text" class="form-control input-sm w-date" name="endTime" placeholder="结束时分秒" onclick="WdatePicker({dateFmt:'HH:mm:ss'})">
+	<button class="btn btn-default btn-sm" onclick="queryPage(1);return false;"><span class="glyphicon glyphicon-search"></span>搜索</button>	
+</div>
+
+<table th:fragment="listFragment">
+	<tr>
+		<th>微服务</th>
+		<th class="page-sorting-desc" data-order-name="gatherTime">采集时间</th>
+		<th data-order-name="requestInfo.maxProcessingTime">最大请求时间</th>
+		<th>并发数</th>
+		<th>DB连接数</th>
+		<th>已用堆内存</th>
+		<th>进程CPU使用率</th>				
+		<th>操作</th>             
+	</tr>
+	<script id="pageTemplate" type="text/html">
+	{{each arrayList as v i}}
+	<tr>
+		<td class="w-title-s">{{v.serviceId}}</td>
+		<td class="w-time">{{v.gatherTime}}</td>
+		<td class="w-number-m">{{v.requestInfo.maxProcessingTime}}</td>
+		<td class="w-number-m">{{v.requestInfo.concurrentN}}</td>	
+		<td class="w-number-m">{{v.dsActive}}</td>
+		<td class="w-number-m">{{v.useMemory}}M</td>
+		<td class="w-number-m">{{(v.processCpuLoad*100).toFixed(2)}}%</td>							
+		<td class="w-action"><a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this, '{{v._id}}')">详情</a></td>
+	</tr>
+	{{/each}}
+	</script>    
+</table>
+</div>
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+
+</body>
+</html>
+

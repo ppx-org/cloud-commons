@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	refreshPageData([[${listJson}]]);
+});
+
+template.helper('transfer', function(all) {
+	return JSON.stringify(all);
+})
+
+function viewDetail(obj, serviceId) {
+	var json = $(obj).attr("data-content");
+	$("#viewDetailJson").text(formatJson(json));
+	$("#viewDetail").modal("show");
+}
+
+function toTop(serviceId) {	
+	var a = [serviceId];
+	$("[name=serviceId]").each(function(){
+		if (serviceId != $(this).text()) {
+			a.push($(this).text());
+		}
+	});
+	toOrder(a);
+}
+
+function toUp(n) {
+	var a = [];
+	$("[name=serviceId]").each(function(){		
+		a.push($(this).text());		
+	});
+	var upServiceId = a[n];
+	var targetUpServiceId = a[n - 1];
+	// 交换
+	a[n] = targetUpServiceId;
+	a[n - 1] = upServiceId;
+	toOrder(a);
+}
+
+function toDown(n) {
+	var a = [];
+	$("[name=serviceId]").each(function(){		
+		a.push($(this).text());		
+	});
+	var downServiceId = a[n];
+	var targetDownServiceId = a[n + 1];
+	// 交换
+	a[n] = targetDownServiceId;
+	a[n + 1] = downServiceId;
+	toOrder(a);
+}
+
+function toOrder(a) {
+	$('#loading').modal('show');
+	$.post([[@{/monitorConf/orderService}]], "serviceIds=" + a, function(d){
+		refreshPageData(d);
+		$('#loading').modal('hide');
+	});
+}
+
+function display(serviceId, display) {
+	showLoading();
+	$.post([[@{/monitorConf/display}]], "serviceId=" + serviceId + "&display=" + display, function(data){
+		refreshPageData(data);
+		hideLoading();
+	});
+}
+</script>
+<style>
+.serviceHide>td {background-color: gray;color:white}
+</style>
+</head>
+<body>
+<div class="page-list-body">	
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul><script>$('#service').tab('show')</script>
+	<div class="page-list-query">
+		<div class="page-list-title"><div>说明：更新时间为每次采集回写时间(字段以last开头)</div></div>
+	</div>
+	
+	<table class="page-list-table table table-bordered">
+		<tr>
+			<th style="width:140px">微服务</th>
+			<th>项目</th>
+			<th>版本</th>
+			<th>操作系统</th>
+			<th>CPU核数</th>
+			<th>物理内存</th>
+			<th style="width:120px">最大堆内存</th>	
+			<th>DB最大连接数</th>							
+			<th style="width:140px">更新时间</th>
+			<th style="width:140px">创建时间</th>
+			<th style="width:80px">显示/隐藏</th>
+			<th style="width:140px">排序</th>
+			<th>操作</th>          
+		</tr>
+		<script id="pageTemplate" type="text/html">
+		{{each arrayList as v i}}
+		<tr {{if v.display == 0}}class="serviceHide"{{/if}}>
+			<td name="serviceId">{{v._id}}</td>
+			<td>{{v.artifactId}}</td>
+			<td>{{v.version}}</td>
+			<td>{{v.osName}}</td>
+			<td>{{v.availableProcessors}}</td>
+			<td class="right">{{(v.totalPhysicalMemory/1024/1024).toFixed(2)}}M</td>
+			<td class="right">{{v.maxMemory}}M</td>
+			<td class="right">{{v.maxActive}}</td>
+			<td class="right">{{v.lasted}}</td>
+			<td>{{v.firsted}}</td>
+			<td>
+				{{if v.display == 1}}显示{{else}}隐藏{{/if}}
+				<a class="glyphicon glyphicon-retweet" title="转换" href="#" onclick="display('{{v._id}}', {{if v.display == 1}}0{{else}}1{{/if}})"></a>
+			</td>
+			<td>
+				{{if arrayList.length != 1 && i !== 0}}
+				<a href="#" onclick="toTop('{{v._id}}')" title="置顶" class="glyphicon glyphicon-step-backward" style="transform: rotate(90deg);"></a>
+				<a href="#" onclick="toUp('{{i}}')" title="上移" class="glyphicon glyphicon-arrow-up"></a>
+				{{/if}}
+					
+				{{if arrayList.length != 1 && i != arrayList.length - 1}}
+				<a href="#" onclick="toDown({{i}})" title="下移" class="glyphicon glyphicon-arrow-down"></a>
+				{{/if}}					
+			</td>
+			<td><a href="#" data-content="{{transfer(v)}}" onclick="viewDetail(this, '{{v._id}}')">详情</a></td>
+		</tr>
+		{{/each}}
+		</script>    
+	</table>
+</div>
+
+<div th:replace="common/fragment/common::viewDetail"></div>
+
+</body>
+</html>
+

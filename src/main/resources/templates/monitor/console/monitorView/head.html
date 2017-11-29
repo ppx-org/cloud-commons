@@ -1,0 +1,19 @@
+
+
+<li id="index"><a href="#" onclick="tagGo(this)" data-toggle="tab">首页</a></li>
+<li id="service"><a href="#" onclick="tagGo(this)" data-toggle="tab">微服务</a></li>
+<li id="start"><a href="#" onclick="tagGo(this)" data-toggle="tab">启动日志</a></li>
+<li id="access"><a href="#" onclick="tagGo(this)" data-toggle="tab">访问日志</a></li>
+<li id="error"><a href="#" onclick="tagGo(this)" data-toggle="tab">异常日志</a></li>
+<li id="gather"><a href="#" onclick="tagGo(this)" data-toggle="tab">采集日志</a></li>
+<li id="uriStat"><a href="#" onclick="tagGo(this)" data-toggle="tab">uri统计</a></li>
+<li id="sqlStat"><a href="#" onclick="tagGo(this)" data-toggle="tab">sql统计</a></li>
+<li id="response"><a href="#" onclick="tagGo(this)" data-toggle="tab">响应统计</a></li>
+<li id="warning"><a href="#" onclick="tagGo(this)" data-toggle="tab">warning</a></li>
+<li id="debug"><a href="#" onclick="tagGo(this)" data-toggle="tab">debug</a></li>
+<li id="set"><a href="#" onclick="tagGo(this)" data-toggle="tab">设置/清除</a></li>
+<script>
+function tagGo(obj) {
+	location.href = $(obj).parent().attr("id");
+}
+</script>
