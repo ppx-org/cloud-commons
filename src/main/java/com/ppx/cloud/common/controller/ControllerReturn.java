@@ -50,7 +50,7 @@ public class ControllerReturn {
 				}
 			} else {
 				String keyName = o.getClass().getSimpleName();
-				keyName = "Integer".equals(keyName) ? "result" : keyName;
+				keyName = "Integer".equals(keyName) || "Long".equals(keyName) ? "result" : keyName;
 				keyName = keyName.substring(0,1).toLowerCase() + keyName.substring(1);
 				map.put(keyName, o);
 			}
