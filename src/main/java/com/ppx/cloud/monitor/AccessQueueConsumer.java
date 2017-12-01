@@ -193,14 +193,16 @@ public class AccessQueueConsumer {
 			AccessQueueConsumer.lastGatherTime = currentDate;
 		}
 		
-		// 15秒，同步配置数据
-		if (currentDate.getTime() - lastGetConfTime.getTime() >= 15000) {
+		// 30秒，同步配置数据
+		if (currentDate.getTime() - lastGetConfTime.getTime() >= 30000) {
 			Map<?, ?> map = mongodbService.getConfig(AccessUtils.getServiceId());
-			PropertiesConfig.setAccessDebug((Boolean)map.get("isAccessDebug"));
-			PropertiesConfig.setAccessWarning((Boolean)map.get("isAccessWarning"));
-			PropertiesConfig.setGatherInterval((Long)map.get("gatherInterval"));
-			PropertiesConfig.setDumpMaxTime((Long)map.get("dumpMaxTime"));			
-			AccessQueueConsumer.lastGetConfTime = currentDate;			
+			if (map != null) {
+				PropertiesConfig.setAccessDebug((Boolean)map.get("isAccessDebug"));
+				PropertiesConfig.setAccessWarning((Boolean)map.get("isAccessWarning"));
+				PropertiesConfig.setGatherInterval((Long)map.get("gatherInterval"));
+				PropertiesConfig.setDumpMaxTime((Long)map.get("dumpMaxTime"));			
+				AccessQueueConsumer.lastGetConfTime = currentDate;
+			}	
 		}
 	}
 	
