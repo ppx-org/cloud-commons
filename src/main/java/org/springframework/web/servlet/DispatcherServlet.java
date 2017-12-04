@@ -985,7 +985,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					return;
 				}
 
-				// dengxz 添加最后一个参数
+				// dengxz 添加最后一个参数mappedHandler.getHandler()
 				applyDefaultViewName(processedRequest, mv, mappedHandler.getHandler());
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
@@ -1034,7 +1034,14 @@ public class DispatcherServlet extends FrameworkServlet {
 				HandlerMethod m = (HandlerMethod)mappedHandler;
 				String pName = m.getBeanType().getPackage().getName();
 				String[] a = pName.split("\\.");
-				String path = a[a.length - 2] + "/" + a[a.length - 1];
+				// 去掉类的最后一个package名称
+				// package com.ppx.cloud.demo.module.test.TestController;对应demo/module/test/*.html
+				String path = a[a.length - 3] + "/" + a[a.length - 2];
+				
+				if (a.length == 5) {
+					// package com.ppx.cloud.grant.controller.grantController;对应grant/grant/*.html
+					path = a[a.length - 2];
+				}
 				mv.setViewName(path + "/" +  getDefaultViewName(request));
 			}
 			else if (defaultViewName != null) {

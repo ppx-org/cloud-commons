@@ -57,7 +57,7 @@ template.helper('viewDisk', function(t, lastUsableSpace) {
 
 <body>
 <div class="page-list-body">
-	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul><script>$('#index').tab('show')</script>
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/monitorView/head"></ul><script>$('#index').tab('show')</script>
 	<div class="page-list-query">
 		<div class="page-list-title"><b th:text="${title}" style="font-size:18px"></b>(<span th:text="${currentServiceId}"></span>)</div>
 	</div> 	

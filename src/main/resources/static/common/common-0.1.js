@@ -61,7 +61,7 @@ function alertDanger(msg) {alertShow(msg, "alert-danger", 2000)}
 
 function confirm(msg, func) {
 	$("#myConfig").data("func", func);
-	$("#myConfigMsg").text(msg);
+	$("#myConfigMsg").text(isNaN(msg)?msg:"确定要删除"+msg+"？");
 	$("#myConfig").modal('show');
 }
 

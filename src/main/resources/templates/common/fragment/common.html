@@ -33,7 +33,7 @@
 <!--  -->
 <div th:fragment="pageListMonitor(tabId)">
 <div class="page-list-body">
-	<ul id="myTab" class="nav nav-tabs" th:include="monitor/console/monitorView/head"></ul><script th:inline="javascript">$([[${tabId}]]).tab('show')</script>
+	<ul id="myTab" class="nav nav-tabs" th:include="monitor/monitorView/head"></ul><script th:inline="javascript">$([[${tabId}]]).tab('show')</script>
 	<div th:replace="::pageListBody(1)"></div>
 </div>
 </div>
