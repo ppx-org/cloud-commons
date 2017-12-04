@@ -90,10 +90,6 @@ function activeSorting() {
 			$(".page-sorting-asc").removeClass("page-sorting-asc");
 			$(".page-sorting-desc").removeClass("page-sorting-desc");
 			$(this).addClass("page-sorting-asc");
-			
-			
-			//$(".page-sorting, .page-sorting-asc, .page-sorting-desc").attr("class", "page-sorting");
-			//$(this).attr("class", "page-sorting-asc");
 		} else {
 			$("#orderName").val(orderName);
 			$("#orderType").val("desc");
@@ -103,8 +99,6 @@ function activeSorting() {
 			$(".page-sorting-asc").removeClass("page-sorting-asc");
 			$(".page-sorting-desc").removeClass("page-sorting-desc");
 			$(this).addClass("page-sorting-desc");
-			//$(".page-sorting, .page-sorting-asc, .page-sorting-desc").attr("class", "page-sorting");
-			//$(this).attr("class", "page-sorting-desc");
 		}
 		queryPage(1);
 	});
@@ -121,15 +115,14 @@ function refreshPageData(data, pageTemplateId) {
 }
 
 function refreshFooter(p) {
+	$("#pageNumUL").empty();
 	// p.pageSize每页几个记录 p.totalRows总记录数 p.pageNumber当前页 
 	$("#totalRows").text(p.totalRows);
 	if (p.totalRows == 0) return;
 	
 	activeSorting();
 	
-	
 	var pageTotalNum = Math.ceil(p.totalRows/p.pageSize);
-	$("#pageNumUL").empty();
 	if (p.pageNumber == 1) {
 		$("#pageNumUL").append('<li class="disabled"><a>«</a></li>');
 	}
