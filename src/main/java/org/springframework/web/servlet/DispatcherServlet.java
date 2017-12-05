@@ -1034,15 +1034,20 @@ public class DispatcherServlet extends FrameworkServlet {
 				HandlerMethod m = (HandlerMethod)mappedHandler;
 				String pName = m.getBeanType().getPackage().getName();
 				String[] a = pName.split("\\.");
-				// 去掉类的最后一个package名称
-				// package com.ppx.cloud.demo.module.test.TestController;对应demo/module/test/*.html
-				String path = a[a.length - 3] + "/" + a[a.length - 2];
 				
-				if (a.length == 5) {
-					// package com.ppx.cloud.grant.controller.grantController;对应grant/grant/*.html
-					path = a[a.length - 2];
+				if (a.length == 6) {
+					// 去掉类的最后一个package名称
+					// package com.ppx.cloud.demo.module.test.TestController;对应demo/module/test/*.html
+					String path = a[a.length - 3] + "/" + a[a.length - 2] + "/" + a[a.length - 1];
+					mv.setViewName(path + "/" +  defaultViewName.split("/")[1]);
 				}
-				mv.setViewName(path + "/" +  getDefaultViewName(request));
+				else if (a.length == 5) {
+					// package com.ppx.cloud.grant.controller.grantController;对应grant/grant/*.html
+					mv.setViewName(a[a.length - 2] + "/" +  getDefaultViewName(request));
+				}
+				else {
+					mv.setViewName(defaultViewName);
+				}
 			}
 			else if (defaultViewName != null) {
 				mv.setViewName(defaultViewName);
