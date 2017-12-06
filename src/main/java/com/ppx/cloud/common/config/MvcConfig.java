@@ -2,6 +2,8 @@ package com.ppx.cloud.common.config;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -24,8 +26,9 @@ import com.ppx.cloud.common.json.ObjectMappingCustomer;
 @Configuration
 public class MvcConfig extends WebMvcConfigurationSupport {
 	
-	@Autowired
-	public Environment env;
+	// 为了让firstConfigBean先运行 (@ComponentScan自动扫描之后@Order不生效)
+	@Resource(name = "firstConfigRun")
+	private Object firstConfigBean;
 	
 
 	@Override
@@ -51,6 +54,9 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        
+        // 单机模式  图片
+        registry.addResourceHandler("/img/**").addResourceLocations("file:" + System.getProperty("file.imgFilePath"));
         super.addResourceHandlers(registry);
     }
 	
