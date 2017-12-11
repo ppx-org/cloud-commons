@@ -46,6 +46,11 @@
 
 
 
+/** form */
+.form-body {padding:3px;min-width:1200px;overflow-x:hidden}
+.form-title {height:20px;font-size:15px;line-height:30px;padding-left:20px;}
+
+
 
 [class|=switch] {
 	position: relative;
