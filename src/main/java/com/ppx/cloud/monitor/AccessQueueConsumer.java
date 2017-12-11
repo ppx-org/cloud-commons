@@ -189,19 +189,19 @@ public class AccessQueueConsumer {
 		// 采集间隔
 		Date currentDate = new Date();
 		if (currentDate.getTime() - lastGatherTime.getTime() >= PropertiesConfig.getGatherInterval()) {
-			timingGather();
 			AccessQueueConsumer.lastGatherTime = currentDate;
+			timingGather();
 		}
 		
 		// 30秒，同步配置数据
 		if (currentDate.getTime() - lastGetConfTime.getTime() >= 30000) {
+			AccessQueueConsumer.lastGetConfTime = currentDate;
 			Map<?, ?> map = mongodbService.getConfig(AccessUtils.getServiceId());
 			if (map != null) {
 				PropertiesConfig.setAccessDebug((Boolean)map.get("isAccessDebug"));
 				PropertiesConfig.setAccessWarning((Boolean)map.get("isAccessWarning"));
 				PropertiesConfig.setGatherInterval((Long)map.get("gatherInterval"));
-				PropertiesConfig.setDumpMaxTime((Long)map.get("dumpMaxTime"));			
-				AccessQueueConsumer.lastGetConfTime = currentDate;
+				PropertiesConfig.setDumpMaxTime((Long)map.get("dumpMaxTime"));
 			}	
 		}
 	}
