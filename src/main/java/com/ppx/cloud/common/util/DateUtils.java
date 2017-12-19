@@ -11,6 +11,8 @@ public class DateUtils {
 	
 	public final static String MAX_DATE = "3000-01-01";
 	
+	public final static String MAX_DATE_DESC = "-";
+	
 	public static String today() {
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).format(new Date());
@@ -18,6 +20,16 @@ public class DateUtils {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public static String getMaxDateDesc(Date date) {
+		if (date == null) return "";
+		
+		String d = new SimpleDateFormat(DATE_PATTERN).format(date);
+		if (MAX_DATE.equals(d)) {
+			return MAX_DATE_DESC;
+		}
+		return d;
 	}
 	
 }
