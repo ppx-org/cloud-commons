@@ -44,7 +44,7 @@
 
 <div th:fragment="pageListBody(type)" class="page-list-body">
 	<div class="page-list-query">
-		<div class="page-list-title" th:if="${type == 0}")><span class="glyphicon glyphicon-th-list"></span><span th:text="${title}"></span></div>
+		<div class="page-list-title" th:if="${type == 0}"><span class="glyphicon glyphicon-th-list"></span><span th:text="${title}"></span></div>
 		<form id="queryForm" class="form-inline">
 		<input type="hidden" id="pageSize" name="pageSize" value="15">
 		<input type="hidden" id="pageNumber" name="pageNumber">
