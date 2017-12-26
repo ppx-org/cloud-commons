@@ -1,6 +1,7 @@
 package com.ppx.cloud.common.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
@@ -16,6 +17,17 @@ public class DateUtils {
 	public static String today() {
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).format(new Date());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static String tomorrow() {
+		try {
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.DATE, 1);
+			return new SimpleDateFormat(DATE_PATTERN).format(c.getTime());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
