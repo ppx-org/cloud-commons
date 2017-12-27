@@ -108,7 +108,7 @@ function refreshPageData(data, pageTemplateId) {
 	if (!data) return;
 	if (!pageTemplateId) pageTemplateId = "pageTemplate";
 	
-	$("#" + pageTemplateId).parent().find("tr:gt(0)").remove();
+	$("#" + pageTemplateId).parent().find(">tr:gt(0)").remove();
 	$("#" + pageTemplateId).parent().append(template(pageTemplateId, data));
 	if (data.page) refreshFooter(data.page);
 	if (data.springDataPageable) refreshFooter(data.springDataPageable);
