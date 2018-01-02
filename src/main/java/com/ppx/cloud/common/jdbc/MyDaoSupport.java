@@ -19,6 +19,7 @@ import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 import com.ppx.cloud.common.page.LimitRecord;
 import com.ppx.cloud.common.page.Page;
+import com.ppx.cloud.storecommon.query.bean.QueryPage;
 
 
 /**
@@ -356,4 +357,56 @@ public class MyDaoSupport extends JdbcDaoSupport {
     		return bw.getPropertyTypeDescriptor(fieldName).getAnnotation(Column.class);
     	}
     }
+    
+    
+    
+    // xxxxxxxxxxxxxxxxxxxxxxxxxx wx xxxxxxxxxxxxxxxxxxxxxxxxxx
+    protected <T> List<T> mQueryPage(Class<T> c, QueryPage page, StringBuilder sql, Object... obj) {
+    	List<Object> paraList = new ArrayList<Object>();
+    	for (Object o : obj) {
+    		paraList.add(o);
+		}
+		
+		sql.append(" limit ?, ?");
+		paraList.add((page.getPageNumber() - 1) * page.getPageSize());
+		paraList.add(page.getPageSize() + 1); // 多读一条判断是否还有更多
+		
+		List<T> r = new ArrayList<T>();
+		if (c.getTypeName().equals("java.lang.Integer")) {
+			r = (List<T>)super.getJdbcTemplate().queryForList(sql.toString(), Integer.class, paraList.toArray());
+		}
+		else {
+			r = (List<T>)super.getJdbcTemplate().query(sql.toString(), BeanPropertyRowMapper.newInstance(c), paraList.toArray());
+		}
+    	if (r.size() == page.getPageSize() + 1) {
+    		page.setHasMore(true);
+    		
+    		// 删除最后条
+    		r.remove(r.size() - 1);
+    	}
+    	else {
+    		page.setHasMore(false);
+    	}
+    	
+    	return r;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
