@@ -122,14 +122,14 @@ public class MyDaoSupport extends JdbcDaoSupport {
      * @return 更新成功返回1,失败返回0
      */
     protected int update(Object bean) {
-    	return updateNoUninuqe(bean, null);
+    	return updateNoUnique(bean, null);
     }
     
     protected int update(Object bean, LimitRecord limitRecord) {
-    	return updateNoUninuqe(bean, limitRecord);
+    	return updateNoUnique(bean, limitRecord);
     }
     
-    private int updateNoUninuqe(Object bean, LimitRecord limitRecord) {
+    private int updateNoUnique(Object bean, LimitRecord limitRecord) {
     	BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(bean);
     	PropertyDescriptor[] propertyDescriptor = bw.getPropertyDescriptors();
 		
@@ -180,14 +180,14 @@ public class MyDaoSupport extends JdbcDaoSupport {
      * @return 更新成功返回1,失败返回0
      */
     protected int update(Object bean, String... uniqueColNames) {
-    	return updateUninuqe(bean, null, uniqueColNames);
+    	return updateUnique(bean, null, uniqueColNames);
     }
     
     protected int update(Object bean, LimitRecord limitRecord, String... uniqueColNames) {
-    	return updateUninuqe(bean, limitRecord, uniqueColNames);
+    	return updateUnique(bean, limitRecord, uniqueColNames);
     }
     
-    private int updateUninuqe(Object bean, LimitRecord limitRecord, String... uniqueColNames) {
+    private int updateUnique(Object bean, LimitRecord limitRecord, String... uniqueColNames) {
     	BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(bean);
     	PropertyDescriptor[] propertyDescriptor = bw.getPropertyDescriptors();
 		
