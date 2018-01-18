@@ -49,7 +49,7 @@ public class PriceCommonService extends MyDaoSupport {
 	 * 
 	 * @param date
 	 * @param skuIndexMap 需要skuId和num
-	 * @return
+	 * @return 1:正常 -2:有不存的skuId
 	 */
 	
 	public Map<Integer, List<SkuIndex>> countPrice(Date date, Map<Integer, SkuIndex> skuIndexMap) {
@@ -365,6 +365,7 @@ public class PriceCommonService extends MyDaoSupport {
 		
 		
 		
+		// -2表示有不存在的skuId
 		
 		
 		returnMap.put(1, skuIndexList);
