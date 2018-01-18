@@ -1,5 +1,7 @@
 package com.ppx.cloud.storecommon.price.bean;
 
+import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
+
 public class SkuIndex {
 	private int skuId;
 	
@@ -113,7 +115,9 @@ public class SkuIndex {
 	}
 
 	
-	
+	public String getProlicyDesc() {
+		return DecodePolicy.decode(policy);
+	}
 	
 	
 	
