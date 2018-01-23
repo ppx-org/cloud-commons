@@ -52,6 +52,11 @@ public class PriceCommonService extends MyDaoSupport {
 	 * @return 1:正常 -2:有不存的skuId
 	 */
 	
+	public Map<Integer, List<SkuIndex>> countPrice(Map<Integer, SkuIndex> skuIndexMap) {
+		// null取当天值
+		return countPrice(null, skuIndexMap);
+	}
+	
 	public Map<Integer, List<SkuIndex>> countPrice(Date date, Map<Integer, SkuIndex> skuIndexMap) {
 		Map<Integer, List<SkuIndex>> returnMap = new HashMap<Integer, List<SkuIndex>>();
 		
@@ -120,14 +125,26 @@ public class PriceCommonService extends MyDaoSupport {
 		// index >>>>>>>>>>>>>>>>>>>>>>>
 		Map<String, Object> prodParamMap = new HashMap<String, Object>();
 		prodParamMap.put("prodIdList", prodIdList);
-		prodParamMap.put("date", date);	
-		String indexSql = "select (select SKU_ID from sku where PROD_ID = t.PROD_ID) SKU_ID, t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from"
-				+ " (select * from program_index where PROD_ID in (:prodIdList) and :date between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
+		String dateSql = "curdate()";
+		if (date != null) {
+			dateSql = ":date";
+			prodParamMap.put("date", date);	
+		}
+		
+		String indexSql = "select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from"
+				+ " (select * from program_index where PROD_ID in (:prodIdList) and " + dateSql + " between INDEX_BEGIN and INDEX_END order by INDEX_PRIO desc) t group by t.PROD_ID";
 		List<SkuIndex> indexList = jdbc.query(indexSql, prodParamMap, BeanPropertyRowMapper.newInstance(SkuIndex.class));
+		Map<Integer, SkuIndex> indexMap = new HashMap<Integer, SkuIndex>();
 		for (SkuIndex index : indexList) {
-			SkuIndex newIndex = skuIndexMap.get(index.getSkuId());
-			newIndex.setProgId(index.getProgId());
-			newIndex.setPolicy(index.getPolicy());
+			indexMap.put(index.getProdId(), index);
+		}
+		
+		for (SkuIndex index : skuIndexMap.values()) {
+			SkuIndex promoIndex = indexMap.get(index.getProdId());
+			if (promoIndex != null) {
+				index.setProgId(promoIndex.getProgId());
+				index.setPolicy(promoIndex.getPolicy());
+			}
 			
 		}
 		
