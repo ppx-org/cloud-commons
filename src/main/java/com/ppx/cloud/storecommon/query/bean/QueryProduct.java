@@ -12,6 +12,8 @@ public class QueryProduct {
 	
 	private String t;
 	
+	private String n;
+	
 	private String src;
 	
 	private Integer f;
@@ -54,6 +56,14 @@ public class QueryProduct {
 
 	public void setT(String t) {
 		this.t = t;
+	}
+	
+	public String getN() {
+		return n;
+	}
+
+	public void setN(String n) {
+		this.n = n;
 	}
 
 	public String getSrc() {
