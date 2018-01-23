@@ -3,6 +3,7 @@ package com.ppx.cloud.storecommon.price.bean;
 import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
 
 public class SkuIndex {
+	
 	private int skuId;
 	
 	private int num;
