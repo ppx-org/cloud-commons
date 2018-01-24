@@ -1,4 +1,4 @@
-package com.ppx.cloud.storecommon.query.bean;
+package com.ppx.cloud.storecommon.page;
 
 public class QueryPage {
 

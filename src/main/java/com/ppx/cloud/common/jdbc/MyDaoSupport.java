@@ -19,7 +19,7 @@ import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 import com.ppx.cloud.common.page.LimitRecord;
 import com.ppx.cloud.common.page.Page;
-import com.ppx.cloud.storecommon.query.bean.QueryPage;
+import com.ppx.cloud.storecommon.page.QueryPage;
 
 
 /**
