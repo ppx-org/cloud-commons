@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * 
- * @author dengxz
- * @date 2017年11月14日
- */
+
+
 public class MPageList<T> {
 
 	private List<T> list = new ArrayList<T>();
 	
-	private MQueryPage page = new MQueryPage();
+	private MPage page = new MPage();
 	
 	public MPageList() {
 		
 	}
 	
-	public MPageList(List<T> list, MQueryPage page) {
+	public MPageList(List<T> list, MPage page) {
 		this.list = list;
 		this.page = page;
 	}
@@ -32,11 +29,11 @@ public class MPageList<T> {
 		this.list = list;
 	}
 
-	public MQueryPage getPage() {
+	public MPage getPage() {
 		return page;
 	}
 
-	public void setPage(MQueryPage page) {
+	public void setPage(MPage page) {
 		this.page = page;
 	}
 	

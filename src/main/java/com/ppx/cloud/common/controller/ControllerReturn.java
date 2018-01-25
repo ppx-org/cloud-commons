@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ppx.cloud.common.page.PageList;
+import com.ppx.cloud.storecommon.page.MPageList;
 
 /**
  * 统一返回JSON、成功失败页面
@@ -33,6 +34,16 @@ public class ControllerReturn {
 		for (Object o : obj) {
 			if (o instanceof PageList) {
 				PageList<?> pl = (PageList<?>)o;
+				String keyName = pl.getList().getClass().getSimpleName();
+				keyName = keyName.substring(0,1).toLowerCase() + keyName.substring(1);
+				map.put(keyName, pl.getList());
+				
+				keyName = pl.getPage().getClass().getSimpleName();
+				keyName = keyName.substring(0,1).toLowerCase() + keyName.substring(1);
+				map.put(keyName, pl.getPage());
+			}
+			else if (o instanceof MPageList) {
+				MPageList<?> pl = (MPageList<?>)o;
 				String keyName = pl.getList().getClass().getSimpleName();
 				keyName = keyName.substring(0,1).toLowerCase() + keyName.substring(1);
 				map.put(keyName, pl.getList());

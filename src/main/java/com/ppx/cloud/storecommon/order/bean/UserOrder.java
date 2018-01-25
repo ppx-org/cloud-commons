@@ -1,6 +1,8 @@
 package com.ppx.cloud.storecommon.order.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UserOrder {
 	
@@ -17,6 +19,8 @@ public class UserOrder {
 	private Float orderPrice;
 	
 	private Float payPrice;
+	
+	private List<OrderItem> listItem = new ArrayList<OrderItem>();
 
 	public Integer getOrderId() {
 		return orderId;
@@ -73,8 +77,18 @@ public class UserOrder {
 	public void setPayPrice(Float payPrice) {
 		this.payPrice = payPrice;
 	}
+
+	public List<OrderItem> getListItem() {
+		return listItem;
+	}
+
+	public void setListItem(List<OrderItem> listItem) {
+		this.listItem = listItem;
+	}
 	
-	
+	public void addOrderItem(OrderItem orderItem) {
+		listItem.add(orderItem);
+	}
 	
 	
 }
