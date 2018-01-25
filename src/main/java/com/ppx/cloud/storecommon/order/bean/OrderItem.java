@@ -1,5 +1,8 @@
 package com.ppx.cloud.storecommon.order.bean;
 
+import com.ppx.cloud.common.jdbc.annotation.Table;
+
+@Table(name="order_item")
 public class OrderItem {
 	
 	private Integer itemId;

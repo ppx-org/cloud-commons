@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ppx.cloud.common.jdbc.annotation.Column;
+import com.ppx.cloud.common.jdbc.annotation.Table;
+
+@Table(name="user_order")
 public class UserOrder {
 	
 	private Integer orderId;
@@ -20,6 +24,7 @@ public class UserOrder {
 	
 	private Float payPrice;
 	
+	@Column(readonly=true)
 	private List<OrderItem> listItem = new ArrayList<OrderItem>();
 
 	public Integer getOrderId() {
