@@ -1,6 +1,6 @@
 package com.ppx.cloud.storecommon.query.bean;
 
-public class QueryProduct {
+public class MQueryProduct {
 	
 	private Integer pid;
 	

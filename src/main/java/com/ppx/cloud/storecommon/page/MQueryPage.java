@@ -1,6 +1,6 @@
 package com.ppx.cloud.storecommon.page;
 
-public class QueryPage {
+public class MQueryPage {
 
 	private int pageSize = 6;
 

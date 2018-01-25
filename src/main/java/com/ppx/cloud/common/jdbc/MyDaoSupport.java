@@ -19,7 +19,7 @@ import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 import com.ppx.cloud.common.page.LimitRecord;
 import com.ppx.cloud.common.page.Page;
-import com.ppx.cloud.storecommon.page.QueryPage;
+import com.ppx.cloud.storecommon.page.MQueryPage;
 
 
 /**
@@ -361,7 +361,7 @@ public class MyDaoSupport extends JdbcDaoSupport {
     
     
     // xxxxxxxxxxxxxxxxxxxxxxxxxx wx xxxxxxxxxxxxxxxxxxxxxxxxxx
-    protected <T> List<T> mQueryPage(Class<T> c, QueryPage page, StringBuilder sql, Object... obj) {
+    protected <T> List<T> mQueryPage(Class<T> c, MQueryPage page, StringBuilder sql, Object... obj) {
     	List<Object> paraList = new ArrayList<Object>();
     	for (Object o : obj) {
     		paraList.add(o);

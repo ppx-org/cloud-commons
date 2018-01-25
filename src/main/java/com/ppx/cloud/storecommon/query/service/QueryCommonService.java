@@ -11,16 +11,16 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ppx.cloud.common.jdbc.MyDaoSupport;
-import com.ppx.cloud.storecommon.query.bean.QueryProduct;
+import com.ppx.cloud.storecommon.query.bean.MQueryProduct;
 
 
 @Service
 public class QueryCommonService extends MyDaoSupport {
 	
 	
-	public List<QueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
+	public List<MQueryProduct> listProduct(List<Integer> prodIdList, Integer storeId) {
 		if (prodIdList.size() == 0) {
-			return new ArrayList<QueryProduct>();
+			return new ArrayList<MQueryProduct>();
 		}
 		
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
@@ -35,7 +35,7 @@ public class QueryCommonService extends MyDaoSupport {
 			"left join (select t.PROD_ID, t.PROG_ID, t.INDEX_POLICY POLICY from (select * from program_index i where curdate() between INDEX_BEGIN and INDEX_END order by INDEX_PRIO) t group by t.PROD_ID) idx on p.PROD_ID = idx.PROD_ID " +  
 			"group by p.PROD_ID) t where t.PID in (:prodIdList) order by instr('," + StringUtils.join(prodIdList, ",") + ",',CONCAT(',',t.PID,','))";
 		
-		List<QueryProduct> prodList = jdbc.query(prodSql, paramMap, BeanPropertyRowMapper.newInstance(QueryProduct.class));
+		List<MQueryProduct> prodList = jdbc.query(prodSql, paramMap, BeanPropertyRowMapper.newInstance(MQueryProduct.class));
 		return prodList;
 	}
 
