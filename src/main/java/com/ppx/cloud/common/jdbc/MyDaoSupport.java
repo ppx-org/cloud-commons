@@ -48,7 +48,8 @@ public class MyDaoSupport extends JdbcDaoSupport {
 		List<Object> valList = new ArrayList<Object>();
 				
 		for (PropertyDescriptor d : propertyDescriptor) {
-			if ("class".equals(d.getName())) continue;		
+			
+			if ("class".equals(d.getName()) || d.getWriteMethod() == null) continue;		
 			Column col = getColumnAnnotation(bw, d.getName());
 			if (col != null && (col.readonly() || !col.insertable())) continue;
 			
@@ -85,7 +86,7 @@ public class MyDaoSupport extends JdbcDaoSupport {
         List<Object> uniqueObjList = new ArrayList<Object>(2);
         
 		for (PropertyDescriptor d : propertyDescriptor) {
-			if ("class".equals(d.getName())) continue;
+			if ("class".equals(d.getName()) || d.getWriteMethod() == null) continue;
 			Column col = getColumnAnnotation(bw, d.getName());
 			if (col != null && (col.readonly() || !col.insertable())) continue;
 			
@@ -139,7 +140,7 @@ public class MyDaoSupport extends JdbcDaoSupport {
 		Object idObj = null;		
         
 		for (PropertyDescriptor d : propertyDescriptor) {
-			if ("class".equals(d.getName())) continue;
+			if ("class".equals(d.getName()) || d.getWriteMethod() == null) continue;
 			Object val = bw.getPropertyValue(d.getDisplayName());
 			if (val == null) continue;		
 			Column col = getColumnAnnotation(bw, d.getName());
@@ -200,7 +201,7 @@ public class MyDaoSupport extends JdbcDaoSupport {
         List<Object> uniqueObjList = new ArrayList<Object>(2);
         
 		for (PropertyDescriptor d : propertyDescriptor) {
-			if ("class".equals(d.getName())) continue;
+			if ("class".equals(d.getName()) || d.getWriteMethod() == null) continue;
 			
 			Object val = bw.getPropertyValue(d.getName());
 			if (val == null) continue;
