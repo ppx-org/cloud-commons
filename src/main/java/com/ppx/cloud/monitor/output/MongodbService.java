@@ -158,7 +158,15 @@ public class MongodbService {
 	  		maxMap.put("maxed", a.getBeginTime());
 	  		maxMap.put("sqlList", a.getSqlList());
 	  		maxMap.put("sqlCount", a.getSqlCount());
-	  		maxMap.put("sqlArgMap", a.getSqlArgMap());
+	  		
+	  		String sqlArgMap = null;
+	  		try {
+	  			sqlArgMap = new ObjectMapper().writeValueAsString(a.getSqlArgMap());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	  		
+	  		maxMap.put("sqlArgMap", sqlArgMap);
 	  		newUpdate.set("maxDetail", maxMap);	  		
 	  	}
 	  	mongoTemplate.updateFirst(query, newUpdate, "uri_stat");	
@@ -221,7 +229,15 @@ public class MongodbService {
 		  		if (a.getSqlList().size() == a.getSqlCount().size()) {
 		  			maxMap.put("sqlCount", a.getSqlCount().get(i));
 		  		}
-		  		maxMap.put("sqlArgMap", a.getSqlArgMap().get(i));
+		  		
+		  		String sqlArgMap = null;
+		  		try {
+		  			sqlArgMap = new ObjectMapper().writeValueAsString(a.getSqlArgMap().get(i));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		  		
+		  		maxMap.put("sqlArgMap", sqlArgMap);
 		  		  		
 		  		newUpdate.set("maxDetail", maxMap);	  		
 		  	}
