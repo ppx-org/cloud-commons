@@ -22,12 +22,24 @@ import com.ppx.cloud.storecommon.page.MPageList;
  */
 public class ControllerReturn {
 	
+	private static Map<String, Object> staticMap = new HashMap<String, Object>();
+	static {
+		staticMap.put("actionStatus", "OK");
+		staticMap.put("errorCode", "0");
+		staticMap.put("result", "1");
+	}
+	
+	
 	/**
 	 * 成功时返回的json 
 	 * @param obj 默认使用对象名称，需要改名可以使用Map<String, Object>传入
 	 * @return
 	 */
 	public static Map<String, Object> ok(Object... obj) {
+		if (obj == null || "1".equals(obj.toString())) {
+			return staticMap;
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("actionStatus", "OK");
 		map.put("errorCode", "0");
