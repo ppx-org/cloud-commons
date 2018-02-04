@@ -7,6 +7,24 @@ public class DecodePolicy {
 		if (StringUtils.isEmpty(policy)) {
 			return "";
 		}
+		System.out.println("policy:" + policy);
+		
+		switch (policy.substring(0,1)) {
+			case "%" : return policy.replace("%:0.", "") + "折";
+			case "E" : return policy.replace("E:", "满").replace(",-:", "立减");
+			case "B" : return policy.replace("B:", "买").replace(",F:", "免");
+			case "+" : return policy.replace("+:", "加") + "元多1件";
+			case "y" : return policy.replace("y:", "").replace(",n:", "元") + "件";
+		}
+		// %:0.95
+//		if (policy.startsWith("%")) {
+//			return policy.replace("%:0.", "") + "折";
+//			
+//			if (policy.indexOf("2:") > 0) {
+//				
+//			}
+//			
+//		}
 		
 		return policy
 			.replace("S:", "特价")
