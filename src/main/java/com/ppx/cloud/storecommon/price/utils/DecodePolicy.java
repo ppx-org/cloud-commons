@@ -9,14 +9,14 @@ public class DecodePolicy {
 		}
 		
 		return policy
-			.replace("S:", "special")
+			.replace("S:", "特价")
 			.replace("C:", "change")
 			.replace("A:", "avg")
-			.replace("%:", "disc")
+			.replace("%:", "折扣")
 			.replace("2:", "second")
 			.replace("2+:", "secondAndMore")
-			.replace("E:", "E¥")
-			.replace("-:", "M¥")
+			.replace("E:", "满")
+			.replace("-:", "立减")
 			.replace(":Y", "yen")
 			.replace(":N", "件")
 			.replace("+:", "add¥")
