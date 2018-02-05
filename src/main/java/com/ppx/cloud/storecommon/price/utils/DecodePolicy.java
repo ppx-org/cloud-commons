@@ -7,40 +7,42 @@ public class DecodePolicy {
 		if (StringUtils.isEmpty(policy)) {
 			return "";
 		}
-		System.out.println("policy:" + policy);
 		
 		switch (policy.substring(0,1)) {
-			case "%" : return policy.replace("%:0.", "") + "折";
-			case "E" : return policy.replace("E:", "满").replace(",-:", "立减");
+			case "%" : {
+				if (policy.indexOf("%:1,2:") >= 0) {
+					return policy.replace("%:1,2:0.", "第二件") + "折";
+				}
+				if (policy.indexOf("2:") >= 0) {
+					return policy.replace("%:0.", "单件").replace(",2:0.", "折,第二件") + "折";
+				}
+				if (policy.indexOf("%:1,2+:") >= 0) {
+					return policy.replace("%:1,2+:", "第二件及以上") + "折";
+				}
+				if (policy.indexOf("2+:") >= 0) {
+					return policy.replace("%:0.", "第一件").replace(",2+:0.", "折,第二件及以上") + "折";
+				}
+				return policy.replace("%:0.", "") + "折";
+			}
+			case "S" : return policy.replace("S:", "特价") + "元";
+			case "A" : return policy.replace("A:", "均价") + "元";
+			case "E" : {
+				if (policy.indexOf("C:") >= 0) {
+					return policy.replace("E:", "满").replace(",C:", "元，换购价") + "元";
+				}
+				return policy.replace("E:", "满").replace(",-:", "立减");
+			}
 			case "B" : return policy.replace("B:", "买").replace(",F:", "免");
 			case "+" : return policy.replace("+:", "加") + "元多1件";
 			case "y" : return policy.replace("y:", "").replace(",n:", "元") + "件";
+			case "D" : return "组合价" + policy.substring(policy.indexOf(",P:") + 3) + "元";
 		}
-		// %:0.95
-//		if (policy.startsWith("%")) {
-//			return policy.replace("%:0.", "") + "折";
-//			
-//			if (policy.indexOf("2:") > 0) {
-//				
-//			}
-//			
-//		}
-		
-		return policy
-			.replace("S:", "特价")
-			.replace("C:", "change")
-			.replace("A:", "avg")
-			.replace("%:", "折扣")
-			.replace("2:", "second")
-			.replace("2+:", "secondAndMore")
-			.replace("E:", "满")
-			.replace("-:", "立减")
-			.replace(":Y", "yen")
-			.replace(":N", "件")
-			.replace("+:", "add¥")
-			.replace("m:1", "MoreOne")
-			.replace(":", "").replace(",", "");
+
+		return "?";
 			
 	}
-	
 }
+
+
+
+
