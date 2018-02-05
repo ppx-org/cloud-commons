@@ -38,7 +38,7 @@ public class DecodePolicy {
 			case "D" : return "组合价" + policy.substring(policy.indexOf(",P:") + 3) + "元";
 		}
 
-		return "?";
+		return policy;
 			
 	}
 }
