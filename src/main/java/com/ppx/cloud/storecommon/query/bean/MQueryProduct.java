@@ -1,5 +1,7 @@
 package com.ppx.cloud.storecommon.query.bean;
 
+import com.ppx.cloud.storecommon.price.utils.DecodePolicy;
+
 public class MQueryProduct {
 	
 	private Integer pid;
@@ -36,6 +38,10 @@ public class MQueryProduct {
 
 	public String getArg() {
 		return arg;
+	}
+	
+	public String getPromo() {
+		return DecodePolicy.decode(this.arg);
 	}
 
 	public void setArg(String arg) {
@@ -81,6 +87,7 @@ public class MQueryProduct {
 	public void setF(Integer f) {
 		this.f = f;
 	}
+	
 	
 	
 
