@@ -15,6 +15,8 @@ public class DateUtils {
 	
 	public final static String MAX_DATE_DESC = "-";
 	
+	public final static String HHMM_PATTERN = "HH:mm";
+	
 	public static String today() {
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).format(new Date());
