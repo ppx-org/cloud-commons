@@ -1,5 +1,6 @@
 package com.ppx.cloud.storecommon.order.bean;
 
+import com.ppx.cloud.common.jdbc.annotation.Column;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 
 @Table(name="order_item")
@@ -24,6 +25,20 @@ public class OrderItem {
 	private String itemImg;
 	
 	private String itemPromo;
+	
+	@Column(readonly=true)
+	private Integer storeId;
+	
+	@Column(readonly=true)
+	private Integer itemStatus;
+	
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
 
 	public Integer getItemId() {
 		return itemId;
@@ -104,9 +119,14 @@ public class OrderItem {
 	public void setItemPromo(String itemPromo) {
 		this.itemPromo = itemPromo;
 	}
-	
 
-	
+	public Integer getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(Integer itemStatus) {
+		this.itemStatus = itemStatus;
+	}
 	
 	
 	

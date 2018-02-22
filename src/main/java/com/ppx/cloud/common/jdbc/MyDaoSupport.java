@@ -233,7 +233,7 @@ public class MyDaoSupport extends JdbcDaoSupport {
 		
 		String tableName = getTableName(bean);
 		
-		StringBuilder b = new StringBuilder("update ").append(tableName);	
+		StringBuilder b = new StringBuilder("update ").append(tableName);
 		b.append(" join (select ? ").append(idColName).append(" from dual where not exists (select 1 from ").append(tableName);
 		b.append(" where ").append(StringUtils.collectionToDelimitedString(uniqueColNameList, " and ")).append(" and ").append(idColName).append("!=?)) t");
 		b.append(" set ").append(StringUtils.collectionToCommaDelimitedString(colList)).append(" where ");
