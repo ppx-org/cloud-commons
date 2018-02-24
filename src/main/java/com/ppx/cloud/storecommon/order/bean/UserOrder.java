@@ -24,6 +24,8 @@ public class UserOrder {
 	
 	private Float payPrice;
 	
+	private String deliverCode;
+	
 	@Column(readonly=true)
 	private List<OrderItem> listItem = new ArrayList<OrderItem>();
 
@@ -94,6 +96,13 @@ public class UserOrder {
 	public void addOrderItem(OrderItem orderItem) {
 		listItem.add(orderItem);
 	}
-	
+
+	public String getDeliverCode() {
+		return deliverCode;
+	}
+
+	public void setDeliverCode(String deliverCode) {
+		this.deliverCode = deliverCode;
+	}
 	
 }
