@@ -1,19 +1,3 @@
-//  saveAs(new Blob([""]), "report.xls");
-
-/* FileSaver.js
- * A saveAs() FileSaver implementation.
- * 1.3.2
- * 2016-06-16 18:25:19
- *
- * By Eli Grey, http://eligrey.com
- * License: MIT
- *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
- */
-
-/*global self */
-/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
-
-/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
 
 var saveAs = saveAs || (function(view) {
 	"use strict";
@@ -114,7 +98,7 @@ var saveAs = saveAs || (function(view) {
 					} else {
 						var opened = view.open(object_url, "_blank");
 						if (!opened) {
-							// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
+							// Apple does not allow window.open
 							view.location.href = object_url;
 						}
 					}
@@ -177,9 +161,7 @@ var saveAs = saveAs || (function(view) {
 	|| typeof window !== "undefined" && window
 	|| this.content
 ));
-// `self` is undefined in Firefox for Android content script context
-// while `this` is nsIContentFrameMessageManager
-// with an attribute `content` that corresponds to the window
+
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports.saveAs = saveAs;
@@ -188,3 +170,26 @@ if (typeof module !== "undefined" && module.exports) {
     return saveAs;
   });
 }
+
+
+// -------------------------------------
+var tableToExcel = (function() {
+	return function(trHtml, fileName) {
+		var head = '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>' + fileName + '</x:Name>\
+		<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\
+		</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>';
+		var html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head>' + head + '</head><body><table border="1"><tbody>' + trHtml + '</tbody></table></body></html>';  
+   		var ctx = {table:trHtml}
+   		saveAs(new Blob([html]), fileName + ".xls");
+	}
+})()
+
+
+
+
+
+
+
+
+
+
