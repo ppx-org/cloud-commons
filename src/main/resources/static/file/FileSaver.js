@@ -180,7 +180,7 @@ var tableToExcel = (function() {
 		</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>';
 		var html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head>' + head + '</head><body><table border="1"><tbody>' + trHtml + '</tbody></table></body></html>';  
    		var ctx = {table:trHtml}
-   		saveAs(new Blob([html]), fileName + ".xls");
+   		saveAs(new Blob([html], {type: "text/plain;charset=utf-8"}), fileName + ".xls");
 	}
 })()
 
