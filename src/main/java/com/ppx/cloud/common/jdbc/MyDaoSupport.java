@@ -362,7 +362,8 @@ public class MyDaoSupport extends JdbcDaoSupport {
     
     
     // xxxxxxxxxxxxxxxxxxxxxxxxxx wx xxxxxxxxxxxxxxxxxxxxxxxxxx
-    protected <T> List<T> mQueryPage(Class<T> c, MPage page, StringBuilder sql, Object... obj) {
+    @SuppressWarnings("unchecked")
+	protected <T> List<T> mQueryPage(Class<T> c, MPage page, StringBuilder sql, Object... obj) {
     	List<Object> paraList = new ArrayList<Object>();
     	for (Object o : obj) {
     		paraList.add(o);
