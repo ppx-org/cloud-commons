@@ -59,36 +59,6 @@ public class PriceCommonService extends MyDaoSupport {
 	
 	public Map<Integer, List<SkuIndex>> countPrice(Date date, Map<Integer, SkuIndex> skuIndexMap) {
 		Map<Integer, List<SkuIndex>> returnMap = new HashMap<Integer, List<SkuIndex>>();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	
 		
 		String sSql = "select s.SKU_ID, s.PROD_ID, s.PRICE, s.SKU_NAME, p.PROD_TITLE from sku s join product p on s.PROD_ID = p.PROD_ID where SKU_ID in (:skuIdList)";
@@ -191,12 +161,12 @@ public class PriceCommonService extends MyDaoSupport {
 			}
 		});
 		
-		try {
-			String s = new ObjectMapper().writeValueAsString(skuIndexMap);
-			System.out.println("xxxxxxskuIndexMap:" + s);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//		try {
+//			String s = new ObjectMapper().writeValueAsString(skuIndexMap);
+//			System.out.println("xxxxxxskuIndexMap:" + s);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		
 		
@@ -367,19 +337,7 @@ public class PriceCommonService extends MyDaoSupport {
 			}
 		}
 		
-		
-		
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 		
 		// -2表示有不存在的skuId
