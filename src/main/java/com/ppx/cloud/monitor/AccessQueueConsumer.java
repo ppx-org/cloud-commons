@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,7 +214,7 @@ public class AccessQueueConsumer {
 	public void timingGather() {
 		// 最大连接数
 		
-		HikariDataSource ds = (HikariDataSource)app.getBean("dataSource");
+		HikariDataSource ds = (HikariDataSource)app.getBean(DataSource.class);
 		int dsActive = 0;
 		if (ds.getHikariPoolMXBean() != null) {
 			dsActive = ds.getHikariPoolMXBean().getActiveConnections();
