@@ -1,3 +1,15 @@
+document.onkeydown = function (e) {
+    var ev = window.event || e;
+    var code = ev.keyCode || ev.which;
+    if (code == 116) { // F5
+    	top.$(".menuSelected").click();
+        ev.keyCode ? ev.keyCode = 0 : ev.which = 0;
+        cancelBubble = true;
+        return false;
+    }
+}
+
+
 $(function(){
 	
 	// 增加排序图标
