@@ -21,6 +21,8 @@ public class SkuIndex {
 	// display
 	private String prodTitle;
 	
+	private String skuDesc;
+	
 	private String skuName;
 	
 	private String skuImgSrc;
@@ -97,6 +99,14 @@ public class SkuIndex {
 
 	public void setProdTitle(String prodTitle) {
 		this.prodTitle = prodTitle;
+	}
+
+	public String getSkuDesc() {
+		return skuDesc;
+	}
+
+	public void setSkuDesc(String skuDesc) {
+		this.skuDesc = skuDesc;
 	}
 
 	public String getSkuName() {

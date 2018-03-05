@@ -61,8 +61,8 @@ public class PriceCommonService extends MyDaoSupport {
 		Map<Integer, List<SkuIndex>> returnMap = new HashMap<Integer, List<SkuIndex>>();
 	
 		
-		String sSql = "select s.SKU_ID, s.PROD_ID, s.PRICE, s.SKU_NAME, p.PROD_TITLE from sku s join product p on s.PROD_ID = p.PROD_ID where SKU_ID in (:skuIdList)";
-	
+		String sSql = "select s.SKU_ID, s.SKU_IMG_SRC, s.PROD_ID, s.PRICE, p.SKU_DESC, s.SKU_NAME, p.PROD_TITLE "
+				+ "from sku s join product p on s.PROD_ID = p.PROD_ID where SKU_ID in (:skuIdList)";
 
 		List<Integer> skuIdList = new ArrayList<Integer>();
 		for (Integer skuId : skuIndexMap.keySet()) {
@@ -76,6 +76,7 @@ public class PriceCommonService extends MyDaoSupport {
 		NamedParameterJdbcTemplate jdbc = new NamedParameterJdbcTemplate(getJdbcTemplate());
 		List<SkuIndex> dbSkuList = jdbc.query(sSql, skuParamMap, BeanPropertyRowMapper.newInstance(SkuIndex.class));
 		
+		
 		if (dbSkuList.size() != skuIndexMap.size()) {
 			// skuId不存在
 			return getNoExist(dbSkuList, skuIndexMap);
@@ -87,6 +88,7 @@ public class PriceCommonService extends MyDaoSupport {
 			newIndex.setProdId(index.getProdId());
 			newIndex.setPrice(index.getPrice());
 			newIndex.setProdTitle(index.getProdTitle());
+			newIndex.setSkuDesc(index.getSkuDesc());
 			newIndex.setSkuName(index.getSkuName());
 			newIndex.setSkuImgSrc(index.getSkuImgSrc());
 			prodIdList.add(index.getProdId());
