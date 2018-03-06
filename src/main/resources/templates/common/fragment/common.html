@@ -1,12 +1,12 @@
-<link   th:fragment="base" rel="stylesheet" th:href="'/demo/static/bootstrap-3.3.7/css/bootstrap.min.css'"/>
+<link   th:fragment="base" rel="stylesheet" th:href="#{staticPath}+'/static/bootstrap-3.3.7/css/bootstrap.min.css'"/>
 <script th:fragment="base" type="text/javascript" th:src="#{staticPath}+'/static/common/jquery-3.2.1.min.js'"></script>
 <script th:fragment="base" type="text/javascript" th:src="#{staticPath}+'/static/bootstrap-3.3.7/js/bootstrap.min.js'"></script>
 <script th:fragment="base" type="text/javascript" th:inline="javascript">var contextPath = [[@{/}]]</script>
 
 <link   th:fragment="common" th:replace="::base"></link>
-<link   th:fragment="common" rel="stylesheet" th:href="#{staticPath}+'/static/common/common-0.1.css'"/>
 <script th:fragment="common" type="text/javascript" th:src="#{staticPath}+'/static/common/template3.0.js'"></script>
-<script th:fragment="common" type="text/javascript" th:src="#{staticPath}+'/static/common/common-0.1.js'"></script>
+<link   th:fragment="common" rel="stylesheet" th:href="@{/static/common/common-0.1.css?v1}"/>
+<script th:fragment="common" type="text/javascript" th:src="@{/static/common/common-0.1.js?v1}"></script>
 
 <link   th:fragment="treeview" rel="stylesheet" th:href="#{staticPath}+'/static/treeview/bootstrap-treeview.min.css'" />
 <script th:fragment="treeview" type="text/javascript" th:src="#{staticPath}+'/static/treeview/bootstrap-treeview-v1.min.js'"></script>
