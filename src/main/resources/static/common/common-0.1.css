@@ -1,5 +1,6 @@
 
 .required {color:red}
+.hint {font-size:12px;color:gray}
 
 #loading .modal-content {
 	height:50px;width:100px;margin-left:260px;margin-top:180px;text-align:center;
