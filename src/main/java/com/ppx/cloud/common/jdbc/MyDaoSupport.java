@@ -18,8 +18,8 @@ import com.ppx.cloud.common.jdbc.annotation.Column;
 import com.ppx.cloud.common.jdbc.annotation.Id;
 import com.ppx.cloud.common.jdbc.annotation.Table;
 import com.ppx.cloud.common.page.LimitRecord;
+import com.ppx.cloud.common.page.MPage;
 import com.ppx.cloud.common.page.Page;
-import com.ppx.cloud.storecommon.page.MPage;
 
 
 /**

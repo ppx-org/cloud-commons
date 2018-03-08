@@ -9,8 +9,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ppx.cloud.common.page.MPageList;
 import com.ppx.cloud.common.page.PageList;
-import com.ppx.cloud.storecommon.page.MPageList;
 
 /**
  * 统一返回JSON、成功失败页面
@@ -121,6 +121,16 @@ public class ControllerReturn {
 		try (PrintWriter printWriter = response.getWriter()) {
 			String returnJson = new ObjectMapper().writeValueAsString(map);
 			printWriter.write(returnJson);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void returnJson(HttpServletResponse response, String json) {
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");
+		try (PrintWriter printWriter = response.getWriter()) {
+			printWriter.write(json);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

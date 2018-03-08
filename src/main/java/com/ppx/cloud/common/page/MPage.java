@@ -1,4 +1,4 @@
-package com.ppx.cloud.storecommon.page;
+package com.ppx.cloud.common.page;
 
 public class MPage {
 
