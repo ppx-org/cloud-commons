@@ -213,12 +213,16 @@ public class AccessQueueConsumer {
 	 */
 	public void timingGather() {
 		// 最大连接数
-		
-		HikariDataSource ds = (HikariDataSource)app.getBean(DataSource.class);
 		int dsActive = 0;
-		if (ds.getHikariPoolMXBean() != null) {
-			dsActive = ds.getHikariPoolMXBean().getActiveConnections();
+		try {
+			HikariDataSource ds = (HikariDataSource)app.getBean(DataSource.class);
+			if (ds.getHikariPoolMXBean() != null) {
+				dsActive = ds.getHikariPoolMXBean().getActiveConnections();
+			}
+		} catch (Exception e) {
+			dsActive = -1;
 		}
+		
 				
 		Map<String, Object> gatherMap = new LinkedHashMap<String, Object>();
 		gatherMap.put("serviceId", AccessUtils.getServiceId());
