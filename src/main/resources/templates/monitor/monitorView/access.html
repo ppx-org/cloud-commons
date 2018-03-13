@@ -59,7 +59,7 @@ function queryPage(pageNumber) {
 	<script id="pageTemplate" type="text/html">
 	{{each arrayList as v i}}
 	<tr>
-		<td class="w-title-s">{{v.serviceId}}</td>
+		<td class="w-title-s" title="{{v.cacheKey}}">{{v.serviceId}}</td>
 		<td style="width:180px">{{v.beginTime}}</td>
 		<td style="text-align:left;"><div title="{{v.uri}}" class="ellipsis w-title-l">{{v.uri}}</div></td>
 		<td><div title="{{v.queryString}}" class="ellipsis w-title-s">{{v.queryString}}</div></td>

@@ -52,6 +52,7 @@ public class MongodbService {
 		access.setUri(a.getUri());
 		access.setQueryString(a.getQueryString());
 		access.setUserId(a.getUserId());
+		access.setCacheKey(a.getCacheKey());
 		
 		long useMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
 		access.setUseMemory(useMemory);

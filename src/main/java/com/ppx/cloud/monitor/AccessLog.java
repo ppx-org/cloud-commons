@@ -35,6 +35,8 @@ public class AccessLog {
 	private int getConnTimes = 0;
 	private int releaseConnTimes = 0;
 	
+	private String cacheKey;
+	
 	// 输入参数(PropertiesConfig.isAccessDebugEnabled()控制)
 	private String params;	
 	// 输入json(PropertiesConfig.isAccessDebugEnabled()控制)
@@ -272,7 +274,14 @@ public class AccessLog {
 	public void addSqlBeginTime(Date sqlBeginTime) {
 		this.sqlBeginTime.add(sqlBeginTime);
 	}
-	
+
+	public String getCacheKey() {
+		return cacheKey;
+	}
+
+	public void setCacheKey(String cacheKey) {
+		this.cacheKey = cacheKey;
+	}
 	
 
 }

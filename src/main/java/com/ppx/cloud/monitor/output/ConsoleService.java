@@ -35,6 +35,11 @@ public class ConsoleService {
 		if (!StringUtils.isEmpty(a.getParams())) {
 			infoList.add("params:" + a.getParams());
 		}
+		
+		//  cache
+		if (!StringUtils.isEmpty(a.getCacheKey())) {
+			infoList.add("cache:" + a.getCacheKey());
+		}
 
 		if (a.getSqlList().size() > 0) {
 			String sql = StringUtils.collectionToDelimitedString(a.getSqlList(), "\r\n        ");

@@ -22,6 +22,7 @@ public class AccessEntity {
 	private long useMemory;
 	private String serviceId;
 	private String userId;
+	private String cacheKey;
 	
 	public Date getBeginTime() {
 		return beginTime;
@@ -110,6 +111,14 @@ public class AccessEntity {
 
 	public void setHexId(String hexId) {
 		this.hexId = hexId;
+	}
+
+	public String getCacheKey() {
+		return cacheKey;
+	}
+
+	public void setCacheKey(String cacheKey) {
+		this.cacheKey = cacheKey;
 	}
 
 	
