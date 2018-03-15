@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${title}"></title>
+<link th:replace="common/fragment/common::monitor"/>
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	
+});
+
+function listCacheName() {
+	showLoading();
+	$.post([[@{/monitorCache/listCacheName}]], null, function(r) {
+		hideLoading();
+		var list = r.arrayList;
+		if (list.length == 0) {
+			alertWarning("没有发现cacheName");
+			return;
+		}
+		$("#cacheName").empty();
+		for (var i = 0; i < list.length; i++) {
+			$("#cacheName").append('<option value="' + list[i] + '">' + list[i] + '</option>');
+		}
+	});
+}
+
+function listKey(obj) {
+	var cacheName = obj.value;
+	if (cacheName == "") {
+		return;
+	}
+	showLoading();
+	$.post([[@{/monitorCache/listKey}]], "cacheName=" + cacheName, function(r) {
+		hideLoading();
+		var list = r.linkedHashSet;
+		
+		$("#keyName").empty();
+		for (var i = 0; i < list.length; i++) {
+			$("#keyName").append('<option value="' + list[i] + '">' + list[i] + '</option>');
+		}
+	});
+}
+
+function getValue(obj) {
+	var key = obj.value;
+	showLoading();
+	$.post([[@{/monitorCache/getValue}]], "key=" + key, function(r) {
+		hideLoading();
+		var text = formatJson(JSON.stringify(r.string), false);
+		alert(text)
+		$("#detail").text(text);
+		
+		
+	});
+}
+
+</script>
+
+
+</head>
+
+<body>
+
+<div>
+	<button type="button" class="btn btn-default btn-sm" onclick="listCacheName()">TEST</button>
+</div>
+
+<div>
+	<select class="form-controller" id="cacheName" ondblclick="listKey(this)" size="20" style="width:250px">
+		<option value="">&nbsp;</option>
+	</select>
+
+	<select class="form-controller" id="keyName" ondblclick="getValue(this)" size="20" style="width:250px">
+		<option value="">&nbsp;</option>
+	</select>
+	
+	
+	
+	<table class="table table-bordered table-hover table-condensed">			
+		<tr>
+			<td><pre id="detail" style="text-align: left"></pre></td>
+		</tr>  
+	</table>
+</div>
+
+
+</body>
+
+
+</html>
+
