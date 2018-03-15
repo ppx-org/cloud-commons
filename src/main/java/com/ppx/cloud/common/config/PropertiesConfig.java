@@ -120,7 +120,7 @@ public class PropertiesConfig  {
         dataSource.setPassword(System.getProperty("spring.datasource.password"));
         
         
-        dataSource.setMaximumPoolSize(5);
+        dataSource.setMaximumPoolSize(100);
         return dataSource;
 	}
 
