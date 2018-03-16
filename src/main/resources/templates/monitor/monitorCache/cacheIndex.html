@@ -14,7 +14,7 @@ function listCacheName() {
 	showLoading();
 	$.post([[@{/monitorCache/listCacheName}]], null, function(r) {
 		hideLoading();
-		var list = r.arrayList;
+		var list = r.unmodifiableSet;
 		if (list.length == 0) {
 			alertWarning("没有发现cacheName");
 			return;
@@ -44,21 +44,25 @@ function listKey(obj) {
 }
 
 function getValue(obj) {
-	var key = obj.value;
+	$("#inputKeyName").val(obj.value);
+	queryValue();
+}
+
+function queryValue() {
+	var key = $("#inputKeyName").val();
+	if (key == "") {
+		alertWarning("keyName不能为空");
+		return;
+	}
 	showLoading();
 	$.post([[@{/monitorCache/getValue}]], "key=" + key, function(r) {
 		hideLoading();
-		var text = formatJson(JSON.stringify(r.string), false);
-		alert(text)
+		var text = formatJson(r.string, false);
 		$("#detail").text(text);
-		
-		
 	});
 }
 
 </script>
-
-
 </head>
 
 <body>
@@ -68,23 +72,22 @@ function getValue(obj) {
 </div>
 
 <div>
-	<select class="form-controller" id="cacheName" ondblclick="listKey(this)" size="20" style="width:250px">
+	<div>TEST</div>
+	<select class="form-control input-sm" id="cacheName" ondblclick="listKey(this)" size="10" style="width:250px;height:150px">
 		<option value="">&nbsp;</option>
 	</select>
 
-	<select class="form-controller" id="keyName" ondblclick="getValue(this)" size="20" style="width:250px">
+	<select class="form-control input-sm" id="keyName" ondblclick="getValue(this)" size="10" style="width:250px;height:150px">
 		<option value="">&nbsp;</option>
 	</select>
-	
-	
-	
-	<table class="table table-bordered table-hover table-condensed">			
-		<tr>
-			<td><pre id="detail" style="text-align: left"></pre></td>
-		</tr>  
-	</table>
 </div>
 
+<div>
+	<input type="text" id="inputKeyName" class="form-control input-sm" style="width:300px">
+	<button type="button" class="btn btn-default btn-sm" onclick="queryValue()">TEST</button>
+</div>
+
+<div><pre id="detail" style="text-align: left"></pre></div>
 
 </body>
 

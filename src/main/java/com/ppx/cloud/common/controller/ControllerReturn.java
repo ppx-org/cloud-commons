@@ -71,7 +71,7 @@ public class ControllerReturn {
 				for (String key : set) {
 					map.put(key, m.get(key));
 				}
-			} else {
+			} else if (o != null) {
 				String keyName = o.getClass().getSimpleName();
 				keyName = "Integer".equals(keyName) || "Long".equals(keyName) || "Float".equals(keyName) || "Double".equals(keyName) ? "result" : keyName;
 				keyName = keyName.substring(0,1).toLowerCase() + keyName.substring(1);

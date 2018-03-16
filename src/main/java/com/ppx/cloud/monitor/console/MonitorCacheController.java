@@ -1,8 +1,6 @@
 package com.ppx.cloud.monitor.console;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,9 +27,8 @@ public class MonitorCacheController {
 	private WebApplicationContext app;
 	
 	@GetMapping
-    public ModelAndView index() {
+    public ModelAndView cacheIndex() {
 		ModelAndView mv = new ModelAndView();
-		
 		
 		
 		return mv;
@@ -42,11 +39,7 @@ public class MonitorCacheController {
 		
 		Collection<String> c = cacheManager.getCacheNames();
 		
-		
-		List<String> list = new ArrayList<String>();
-		list.addAll(c);
-		
-		return ControllerReturn.ok(list);
+		return ControllerReturn.ok(c);
 	}
 	
 	
@@ -57,6 +50,7 @@ public class MonitorCacheController {
 		Set<String> set = stringRedisTemplate.keys(cacheName + "*");
 		
 		
+	
 		return ControllerReturn.ok(set);
 	}
 	
@@ -65,7 +59,6 @@ public class MonitorCacheController {
 		StringRedisTemplate stringRedisTemplate = app.getBean(StringRedisTemplate.class);
 		
 		String value = stringRedisTemplate.opsForValue().get(key);
-		
 		
 		return ControllerReturn.ok(value);
 	}
