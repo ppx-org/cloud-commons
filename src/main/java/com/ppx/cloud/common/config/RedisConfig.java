@@ -28,7 +28,7 @@ import com.ppx.cloud.common.util.MD5Utils;
  * @author dengxz
  * @date 2017年11月15日
  */
-@Configuration
+//@Configuration
 public class RedisConfig  {
 
 	// 为了让firstConfigBean先运行 (@ComponentScan自动扫描之后@Order不生效)
