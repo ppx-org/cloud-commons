@@ -39,6 +39,7 @@ public class MonitorCacheController {
 		
 		Collection<String> c = cacheManager.getCacheNames();
 		
+	
 		return ControllerReturn.ok(c);
 	}
 	
@@ -48,6 +49,7 @@ public class MonitorCacheController {
 		StringRedisTemplate stringRedisTemplate = app.getBean(StringRedisTemplate.class);
 		
 		Set<String> set = stringRedisTemplate.keys(cacheName + "*");
+		
 		
 		
 	
