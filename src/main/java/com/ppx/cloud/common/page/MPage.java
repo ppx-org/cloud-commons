@@ -2,7 +2,7 @@ package com.ppx.cloud.common.page;
 
 public class MPage {
 
-	private int pageSize = 6;
+	private int pageSize = 4;
 
 	private int pageNumber = 1;
 
