@@ -2,6 +2,7 @@ package com.ppx.cloud.monitor.output;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,15 +75,33 @@ public class MongodbService {
 		if (error.getCode() == 0) {
 			return;
 		}
-			
+		
 		// 存放少量异常信息com.ppx开头
 		List<StackTraceElement> listStack = new ArrayList<StackTraceElement>();
+		
+		// dengxz 20180402 修改 加上getCause().getCause()
+		List<StackTraceElement> allListStack = new ArrayList<StackTraceElement>();
+		
+		
 		StackTraceElement[] stackTraceElement = a.getException().getStackTrace();
-		for (StackTraceElement element : stackTraceElement) {
+		allListStack.addAll(Arrays.asList(stackTraceElement));
+		
+		if (a.getException().getCause() != null) {
+			StackTraceElement[] cause1 = a.getException().getCause().getStackTrace();
+			allListStack.addAll(Arrays.asList(cause1));
+		}
+		if (a.getException().getCause().getCause() != null) {
+			StackTraceElement[] cause2 = a.getException().getCause().getCause().getStackTrace();
+			allListStack.addAll(Arrays.asList(cause2));
+		}
+		
+		
+		for (StackTraceElement element : allListStack) {
 			if (element.getClassName().startsWith("com.ppx") && element.getLineNumber() > 0) {
 				listStack.add(element);
 			}
 		}
+		
 		
 		Exception myException = null;
 		// 如果没有找到com.ppx的异常，则打印所有
