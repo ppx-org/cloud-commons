@@ -90,7 +90,7 @@ public class MongodbService {
 			StackTraceElement[] cause1 = a.getException().getCause().getStackTrace();
 			allListStack.addAll(Arrays.asList(cause1));
 		}
-		if (a.getException().getCause().getCause() != null) {
+		if (a.getException().getCause() != null && a.getException().getCause().getCause() != null) {
 			StackTraceElement[] cause2 = a.getException().getCause().getCause().getStackTrace();
 			allListStack.addAll(Arrays.asList(cause2));
 		}
