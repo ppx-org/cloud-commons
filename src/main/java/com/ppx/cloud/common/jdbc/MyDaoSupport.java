@@ -365,9 +365,15 @@ public class MyDaoSupport extends JdbcDaoSupport {
     @SuppressWarnings("unchecked")
 	protected <T> List<T> mQueryPage(Class<T> c, MPage page, StringBuilder sql, Object... obj) {
     	List<Object> paraList = new ArrayList<Object>();
-    	for (Object o : obj) {
-    		paraList.add(o);
-		}
+    	if (obj.length == 1 && obj[0] instanceof List) {
+    		paraList = (List<Object>)obj[0];
+    	}
+    	else {
+    		for (Object o : obj) {
+        		paraList.add(o);
+    		}
+    	}
+    	
 		
 		sql.append(" limit ?, ?");
 		paraList.add((page.getPageNumber() - 1) * page.getPageSize());
