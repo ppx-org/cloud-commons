@@ -66,7 +66,9 @@ public class AccessQueueConsumer {
 				try {
 					consumeAccessLog();			
 					threadRun();
-				} catch (Exception e) {
+					
+					// 2018.5.30 Exception改成Throwable防止java.lang.NoClassDefFoundError错误
+				} catch (Throwable e) {
 					// 记录最后一队列输出的异常到采集
 					lastQueueException = e.getMessage();							
 					if (e.getStackTrace().length > 2) {
